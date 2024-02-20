@@ -1,4 +1,5 @@
 import mongoose, { InferSchemaType } from "mongoose";
+import { semesterModelName } from "./semester.model";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
@@ -9,8 +10,15 @@ const scheduleSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  semester: {
+  scheduleType: {
     type: String,
+    enum: ["General", "Special"],
+    required: true,
+  },
+  // The schedule has a semester object, which is the semester that the schedule is for.
+  semester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: semesterModelName,
     required: true,
   },
 });
