@@ -15,7 +15,7 @@ const scheduleSchema = new mongoose.Schema({
     enum: ["General", "Special"],
     required: true,
   },
-  // The schedule has a semester object, which is the semester that the schedule is for.
+
   semester: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
