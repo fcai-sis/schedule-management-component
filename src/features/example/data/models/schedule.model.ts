@@ -7,8 +7,9 @@ const scheduleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  year: {
+  level: {
     type: Number,
+    enum: [1, 2, 3, 4],
     required: true,
   },
   department: {
