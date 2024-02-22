@@ -1,3 +1,4 @@
+import { courseModelName } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
 
 // A semester basically consists of a year and a semester type (e.g. "Fall", "Spring", "Summer").
@@ -15,7 +16,7 @@ const semesterSchema = new mongoose.Schema({
     },
     courses: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: "Course",
+        ref: courseModelName,
     },
     });
 

@@ -1,21 +1,23 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
+import { departmentModelName } from "@fcai-sis/shared-models";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
   },
-  year: {
+  level: {
     type: Number,
+    enum: [1, 2, 3, 4],
     required: true,
   },
-  scheduleType: {
-    type: String,
-    enum: ["General", "Special"],
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: departmentModelName,
     required: true,
   },
-  // The schedule has a semester object, which is the semester that the schedule is for.
+
   semester: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
