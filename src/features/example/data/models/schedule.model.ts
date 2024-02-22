@@ -1,5 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
+import { departmentModelName } from "@fcai-sis/shared-models";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
@@ -10,9 +11,9 @@ const scheduleSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  scheduleType: {
-    type: String,
-    enum: ["General", "Special"],
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: departmentModelName,
     required: true,
   },
 

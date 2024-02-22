@@ -1,29 +1,31 @@
 import mongoose, { InferSchemaType } from "mongoose";
+import { scheduleModelName } from "./schedule.model";
+import { courseModelName, hallModelName, slotModelName, teacherAssistantModelName } from "@fcai-sis/shared-models";
 
 const sectionSchema = new mongoose.Schema({
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Schedule",
+    ref: scheduleModelName,
     required: true,
   },
   hallId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Hall",
+    ref: hallModelName,
     required: true,
   },
   slotId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Slot",
+    ref: slotModelName,
     required: true,
   },
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Course",
+    ref: courseModelName,
     required: true,
   },
   assistantId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Assistant",
+    ref: teacherAssistantModelName,
     required: true,
   },
 });
