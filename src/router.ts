@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import exampleRoutes from "./features/example/example.routes";
+import semesterRoutes from "./features/schedules/semester.routes.js";
 
 const router: Router = Router();
 
 export default (): Router => {
-  exampleRoutes(router);
+  semesterRoutes(router);
 
   return router;
 };
