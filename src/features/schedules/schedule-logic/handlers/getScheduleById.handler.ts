@@ -1,5 +1,3 @@
-// get a schedule by its id
-
 import { Request, Response } from "express";
 import Schedule from "../../data/models/schedule.model";
 

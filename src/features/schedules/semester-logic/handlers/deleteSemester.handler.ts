@@ -1,5 +1,3 @@
-// delete a semester by its id
-
 import { Request, Response } from "express";
 import Semester from "../../data/models/semester.model";
 
