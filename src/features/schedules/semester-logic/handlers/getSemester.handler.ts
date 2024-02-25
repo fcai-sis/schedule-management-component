@@ -14,7 +14,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       id: semester._id,
       year: semester.year,
       semesterType: semester.semesterType,
-      courses: semester.courses,
+      courses: semester.courseIds,
     })),
   });
 };

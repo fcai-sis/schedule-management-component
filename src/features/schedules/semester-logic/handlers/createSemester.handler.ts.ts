@@ -7,7 +7,7 @@ type HandlerRequest = Request<
   {
     year: number;
     semesterType: string;
-    courses: string[];
+    courseIds: string[];
   }
 >;
 
@@ -15,12 +15,12 @@ type HandlerRequest = Request<
  * Create a semester object to store this semester's open courses.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { year, semesterType, courses } = req.body;
+  const { year, semesterType, courseIds } = req.body;
 
   const semester = new Semester({
     year,
     semesterType,
-    courses,
+    courseIds,
   });
 
   await semester.save();
