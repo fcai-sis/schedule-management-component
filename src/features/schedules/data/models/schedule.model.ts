@@ -12,13 +12,13 @@ const scheduleSchema = new mongoose.Schema({
     enum: [1, 2, 3, 4],
     required: true,
   },
-  department: {
+  departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: departmentModelName,
     required: true,
   },
 
-  semester: {
+  semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
     required: true,
@@ -28,6 +28,6 @@ const scheduleSchema = new mongoose.Schema({
 export type ScheduleType = InferSchemaType<typeof scheduleSchema>;
 export const scheduleModelName = "Schedule";
 
-const Schedule = mongoose.model(scheduleModelName, scheduleSchema);
+const ScheduleModel = mongoose.model(scheduleModelName, scheduleSchema);
 
-export default Schedule;
+export default ScheduleModel;

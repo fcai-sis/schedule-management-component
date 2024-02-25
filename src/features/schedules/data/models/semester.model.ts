@@ -14,7 +14,7 @@ const semesterSchema = new mongoose.Schema({
         enum: ["Fall", "Spring", "Summer", "Winter"],
         required: true,
     },
-    courses: {
+    courseIds: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: courseModelName,
     },
@@ -23,6 +23,6 @@ const semesterSchema = new mongoose.Schema({
 export type SemesterType = InferSchemaType<typeof semesterSchema>;
 export const semesterModelName = "Semester";
 
-const Semester = mongoose.model(semesterModelName, semesterSchema);
+const SemesterModel = mongoose.model(semesterModelName, semesterSchema);
 
-export default Semester;
+export default SemesterModel;

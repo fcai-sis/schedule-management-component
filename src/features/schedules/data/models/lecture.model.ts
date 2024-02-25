@@ -33,6 +33,6 @@ const lectureSchema = new mongoose.Schema({
 export type LectureType = InferSchemaType<typeof lectureSchema>;
 export const lectureModelName = "Lecture";
 
-const Lecture = mongoose.model(lectureModelName, lectureSchema);
+const LectureModel = mongoose.model(lectureModelName, lectureSchema);
 
-export default Lecture;
+export default LectureModel;
