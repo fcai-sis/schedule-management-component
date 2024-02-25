@@ -14,8 +14,8 @@ const handler = async (req: HandlerRequest, res: Response) => {
       id: schedule._id,
       description: schedule.description,
       level: schedule.level,
-      department: schedule.department,
-      semester: schedule.semester,
+      department: schedule.departmentId,
+      semester: schedule.semesterId,
     })),
   });
 };

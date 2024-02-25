@@ -10,8 +10,8 @@ type HandlerRequest = Request<
   {
     description?: string;
     level?: number;
-    department?: string;
-    semester?: string;
+    departmentId?: string;
+    semesterId?: string;
   }
 >;
 

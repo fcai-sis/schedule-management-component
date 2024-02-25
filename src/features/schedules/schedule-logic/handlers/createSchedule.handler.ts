@@ -7,8 +7,8 @@ type HandlerRequest = Request<
   {
     description: string;
     level: number;
-    department: string;
-    semester: string;
+    departmentId: string;
+    semesterId: string;
   }
 >;
 
@@ -16,13 +16,13 @@ type HandlerRequest = Request<
  * Create a schedule object which contains a semester object alongside other schedule details.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { description, level, department, semester } = req.body;
+  const { description, level, departmentId, semesterId } = req.body;
 
   const schedule = new Schedule({
     description,
     level,
-    department,
-    semester,
+    departmentId,
+    semesterId,
   });
 
   await schedule.save();
