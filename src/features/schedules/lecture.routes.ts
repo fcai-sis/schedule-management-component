@@ -7,7 +7,6 @@ import createLectureHandler from "./lecture-logic/handlers/createLecture.handler
 const lecturesRoutes = (router: Router) => {
     router.post(
         "/create",
-
         asyncHandler(createLectureHandler)
     );
 };
