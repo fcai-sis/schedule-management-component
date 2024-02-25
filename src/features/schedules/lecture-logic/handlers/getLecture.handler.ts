@@ -4,16 +4,17 @@ import LectureModel from "../../data/models/lecture.model";
 // get lecture filtered by scheduleId or courseId or instructorId or hallId or slotId
 
 type HandlerRequest = Request<
-  {},
-  {},
   {
     scheduleId?: string;
     courseId?: string;
     instructorId?: string;
     hallId?: string;
     slotId?: string;
-  }
+  },
+  {},
+  {}
 >;
+
 
 const handler = async (req: HandlerRequest, res: Response) => {
   const { scheduleId, courseId, instructorId, hallId, slotId } = req.query;
@@ -32,6 +33,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     .populate("hallId")
     .populate("slotId")
     .populate("scheduleId");
+
 
   const response = {
     lectures: lectures.map((lecture) => lecture.toObject()),
