@@ -4,12 +4,18 @@ import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
-import router from "./router";
+import { lecturesRouter, schedulesRouter, semestersRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
 
 // Create Express server
 const app = express();
+
+// intialize the context
+app.use((req: Request, res: Response, next: NextFunction) => {
+  req.context = {};
+  next();
+});
 
 // Configure HTTP request logger middleware
 app.use(
@@ -40,7 +46,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Mount API routes
-app.use("/", router());
+app.use("/schedules", schedulesRouter());
+app.use("/semesters", semestersRouter());
+app.use("/lectures", lecturesRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {
