@@ -1,6 +1,11 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { scheduleModelName } from "./schedule.model";
-import { courseModelName, hallModelName, instructorModelName, slotModelName } from "@fcai-sis/shared-models";
+import {
+  courseModelName,
+  hallModelName,
+  instructorModelName,
+  slotModelName,
+} from "@fcai-sis/shared-models";
 
 const lectureSchema = new mongoose.Schema({
   scheduleId: {
@@ -28,6 +33,46 @@ const lectureSchema = new mongoose.Schema({
     ref: instructorModelName,
     required: true,
   },
+});
+
+// Pre-save hook to ensure referential integrity
+lectureSchema.pre("save", async function (next) {
+  try {
+    const schedule = await mongoose
+      .model(scheduleModelName)
+      .findById(this.scheduleId);
+    if (!schedule) {
+      throw new Error("Schedule not found");
+    }
+
+    const hall = await mongoose.model(hallModelName).findById(this.hallId);
+    if (!hall) {
+      throw new Error("Hall not found");
+    }
+
+    const slot = await mongoose.model(slotModelName).findById(this.slotId);
+    if (!slot) {
+      throw new Error("Slot not found");
+    }
+
+    const course = await mongoose
+      .model(courseModelName)
+      .findById(this.courseId);
+    if (!course) {
+      throw new Error("Course not found");
+    }
+
+    const instructor = await mongoose
+      .model(instructorModelName)
+      .findById(this.instructorId);
+    if (!instructor) {
+      throw new Error("Instructor not found");
+    }
+  } catch (error: any) {
+    return next(error);
+  }
+
+  next();
 });
 
 export type LectureType = InferSchemaType<typeof lectureSchema>;
