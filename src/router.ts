@@ -3,7 +3,7 @@ import { Router } from "express";
 import schedulesRoutes from "./features/schedules/schedule.routes.js";
 import semestersRoutes from "./features/schedules/semester.routes.js";
 import lecturesRoutes from "./features/schedules/lecture.routes.js";
-import sectionsRoutes from "features/schedules/section.routes.js";
+import sectionsRoutes from "./features/schedules/section.routes.js";
 
 export const schedulesRouter = (): Router => {
   const router = Router();

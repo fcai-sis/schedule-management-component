@@ -12,7 +12,7 @@ import getLectureByIdHandler from "./lecture-logic/handlers/getLectureById.handl
 
 const lecturesRoutes = (router: Router) => {
     router.post(
-        "/create",
+        "/",
 
         ensureHallAndSlotUnique,
 
@@ -20,7 +20,7 @@ const lecturesRoutes = (router: Router) => {
     );
 
     router.get(
-        "/getAll",
+        "/",
 
         asyncHandler(getLectureHandler)
     );

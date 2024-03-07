@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import SectionModel from "features/schedules/data/models/section.model";
+import SectionModel from "../../data/models/section.model";
 
 type HandlerRequest = Request<{ sectionId: string }, {}, {}>;
 
