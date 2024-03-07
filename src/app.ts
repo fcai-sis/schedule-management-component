@@ -4,7 +4,7 @@ import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
-import { lecturesRouter, schedulesRouter, semestersRouter } from "./router";
+import { lecturesRouter, schedulesRouter, sectionsRouter, semestersRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
 
@@ -49,6 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/schedules", schedulesRouter());
 app.use("/semesters", semestersRouter());
 app.use("/lectures", lecturesRouter());
+app.use("/sections", sectionsRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {
