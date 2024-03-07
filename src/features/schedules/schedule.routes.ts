@@ -8,18 +8,18 @@ import updateScheduleHandler from "./schedule-logic/handlers/updateSchedule.hand
 
 const schedulesRoutes = (router: Router) => {
   router.post(
-    "/create",
+    "/",
 
     asyncHandler(createScheduleHandler)
   );
 
   router.get(
-    "/schedule",
+    "/",
 
     asyncHandler(getScheduleHandler)
   );
 
-  router.patch("/schedule/:scheduleId", asyncHandler(updateScheduleHandler));
+  router.patch("/:scheduleId", asyncHandler(updateScheduleHandler));
 };
 
 export default schedulesRoutes;

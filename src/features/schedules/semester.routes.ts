@@ -8,18 +8,18 @@ import updateSemesterHandler from "./semester-logic/handlers/updateSemester.hand
 
 const semestersRoutes =  (router: Router) => {
   router.post(
-    "/create",
+    "/",
 
     asyncHandler(createSemesterHandler)
   );
 
   router.get(
-    "/semester",
+    "/",
 
     asyncHandler(getSemesterHandler)
   );
 
-  router.patch("/semester/:semesterId", asyncHandler(updateSemesterHandler));
+  router.patch("/:semesterId", asyncHandler(updateSemesterHandler));
 };
 
 export default semestersRoutes;
