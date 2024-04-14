@@ -3,6 +3,10 @@ import { scheduleModelName } from "./schedule.model";
 import { courseModelName, hallModelName, slotModelName, teacherAssistantModelName } from "@fcai-sis/shared-models";
 
 const sectionSchema = new mongoose.Schema({
+  groupName: {
+    type: String,
+    required: true,
+  },
   scheduleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: scheduleModelName,

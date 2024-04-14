@@ -5,6 +5,7 @@ type HandlerRequest = Request<
   {},
   {},
   {
+    groupName: string;
     scheduleId: string;
     hallId: string;
     slotId: string;
@@ -15,9 +16,10 @@ type HandlerRequest = Request<
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, hallId, slotId, courseId, assistantId } = req.body;
+  const { groupName, scheduleId, hallId, slotId, courseId, assistantId } = req.body;
 
   const section = new SectionModel({
+    groupName,
     scheduleId,
     hallId,
     slotId,
