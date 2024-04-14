@@ -3,9 +3,9 @@ import { scheduleModelName } from "./schedule.model";
 import {
   courseModelName,
   hallModelName,
-  instructorModelName,
   slotModelName,
 } from "@fcai-sis/shared-models";
+import { instructorTeachingModelName } from "./instructorTeaching.model";
 
 const lectureSchema = new mongoose.Schema({
   scheduleId: {
@@ -28,9 +28,9 @@ const lectureSchema = new mongoose.Schema({
     ref: courseModelName,
     required: true,
   },
-  instructorId: {
+  instructorTeachingId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: instructorModelName,
+    ref: instructorTeachingModelName,
     required: true,
   },
 });
@@ -69,13 +69,14 @@ lectureSchema.pre("save", async function (next) {
       throw new Error("Course not found");
     }
 
-    const instructor = await mongoose
-      .model(instructorModelName)
-      .findById(this.instructorId);
-    if (!instructor) {
-      throw new Error("Instructor not found");
+    const instructorTeaching = await mongoose
+      .model(instructorTeachingModelName)
+      .findById(this.instructorTeachingId);
+    if (!instructorTeaching) {
+      throw new Error("InstructorTeaching not found");
     }
-  } catch (error: any) {
+  }
+  catch (error: any) {
     return next(error);
   }
 
