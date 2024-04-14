@@ -26,3 +26,20 @@ export const semesterModelName = "Semester";
 const SemesterModel = mongoose.model(semesterModelName, semesterSchema);
 
 export default SemesterModel;
+
+
+// Pre-save hook to ensure referential integrity
+semesterSchema.pre("save", async function (next) {
+    try {
+        const courses = await mongoose
+            .model(courseModelName)
+            .find({ _id: { $in: this.courseIds } });
+        if (courses.length !== this.courseIds.length) {
+            throw new Error("Some courses not found");
+        }
+
+        next();
+    } catch (error: any) {
+        return next(error);
+    }
+});

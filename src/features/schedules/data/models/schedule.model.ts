@@ -31,3 +31,26 @@ export const scheduleModelName = "Schedule";
 const ScheduleModel = mongoose.model(scheduleModelName, scheduleSchema);
 
 export default ScheduleModel;
+
+// Pre-save hook to ensure referential integrity
+scheduleSchema.pre("save", async function (next) {
+  try {
+    const semester = await mongoose
+      .model(semesterModelName)
+      .findById(this.semesterId);
+    if (!semester) {
+      throw new Error("Semester not found");
+    }
+
+    const department = await mongoose
+      .model(departmentModelName)
+      .findById(this.departmentId);
+    if (!department) {
+      throw new Error("Department not found");
+    }
+
+    next();
+  } catch (error: any) {
+    return next(error);
+  }
+});
