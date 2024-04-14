@@ -18,6 +18,10 @@ const semesterSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: courseModelName,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
     });
 
 export type SemesterType = InferSchemaType<typeof semesterSchema>;
