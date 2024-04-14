@@ -2,9 +2,9 @@ import * as validator from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import logger from "../../../../core/logger";
 
-const createTaTeachingValidatorMiddleware = [
+const createInstructorTeachingValidatorMiddleware = [
   validator
-    .body("taId")
+    .body("instructorId")
     .exists()
     .isMongoId()
     .withMessage("Teacher assistant Id must be a valid mongo id"),
@@ -29,4 +29,4 @@ const createTaTeachingValidatorMiddleware = [
   },
 ];
 
-export default createTaTeachingValidatorMiddleware;
+export default createInstructorTeachingValidatorMiddleware;
