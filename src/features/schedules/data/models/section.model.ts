@@ -33,6 +33,6 @@ const sectionSchema = new mongoose.Schema({
 export type SectionType = InferSchemaType<typeof sectionSchema>;
 export const sectionModelName = "Section";
 
-const Section = mongoose.model(sectionModelName, sectionSchema);
+const SectionModel = mongoose.model(sectionModelName, sectionSchema);
 
-export default Section;
+export default SectionModel;

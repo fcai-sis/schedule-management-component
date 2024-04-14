@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fcai-sis/shared-middlewares": "^2.0.0",
     "@fcai-sis/shared-models": "^0.3.0",
     "@fcai-sis/shared-utilities": "latest",
     "compression": "^1.7.4",
@@ -31,6 +32,7 @@
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/express-validator": "^3.0.0",
     "@types/jest": "^29.5.11",
     "@types/morgan": "^1.9.9",
     "@types/supertest": "^6.0.1",
