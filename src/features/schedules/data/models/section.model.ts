@@ -28,7 +28,7 @@ const sectionSchema = new mongoose.Schema({
     ref: courseModelName,
     required: true,
   },
-  TaTeachingId: {
+  taTeachingId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: taTeachingModelName,
     required: true,
@@ -68,7 +68,7 @@ sectionSchema.pre("save", async function (next) {
       throw new Error("Course not found");
     }
 
-    const taTeaching = await mongoose.model(taTeachingModelName).findById(this.TaTeachingId);
+    const taTeaching = await mongoose.model(taTeachingModelName).findById(this.taTeachingId);
     if (!taTeaching) {
       throw new Error("TA Teaching not found");
     }

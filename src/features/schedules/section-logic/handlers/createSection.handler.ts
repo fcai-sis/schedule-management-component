@@ -5,26 +5,24 @@ type HandlerRequest = Request<
   {},
   {},
   {
-    groupName: string;
     scheduleId: string;
     hallId: string;
     slotId: string;
     courseId: string;
-    assistantId: string;
+    taTeachingId: string;
   }
 >;
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { groupName, scheduleId, hallId, slotId, courseId, assistantId } = req.body;
+  const { scheduleId, hallId, slotId, courseId, taTeachingId } = req.body;
 
   const section = new SectionModel({
-    groupName,
     scheduleId,
     hallId,
     slotId,
     courseId,
-    assistantId
+    taTeachingId
   });
 
   await section.save();

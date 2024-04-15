@@ -11,7 +11,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   const section = await SectionModel.findById(sectionId)
   .populate("courseId")
-  .populate("assistantId")
+  .populate("taTeachingId")
   .populate("hallId")
   .populate("slotId")
   .populate("scheduleId");

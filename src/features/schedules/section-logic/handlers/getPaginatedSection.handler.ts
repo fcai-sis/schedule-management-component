@@ -7,7 +7,6 @@ type HandlerRequest = Request<
   {
     scheduleId?: string;
     courseId?: string;
-    assistantId?: string;
     hallId?: string;
     slotId?: string;
   },
@@ -17,20 +16,18 @@ type HandlerRequest = Request<
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, courseId, assistantId, hallId, slotId } = req.query;
+  const { scheduleId, courseId, hallId, slotId } = req.query;
   const page = req.context.page;
   const pageSize = req.context.pageSize;
 
   const query = {
     ...(scheduleId && { scheduleId }),
     ...(courseId && { courseId }),
-    ...(assistantId && { assistantId }),
     ...(hallId && { hallId }),
     ...(slotId && { slotId }),
   };
   const sections = await SectionModel.find(query)
   .populate("courseId")
-  .populate("assistantId")
   .populate("hallId")
   .populate("slotId")
   .populate("scheduleId")

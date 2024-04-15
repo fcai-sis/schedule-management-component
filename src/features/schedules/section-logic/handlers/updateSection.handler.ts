@@ -12,7 +12,6 @@ type HandlerRequest = Request<
     hallId?: string;
     slotId?: string;
     courseId?: string;
-    assistantId?: string;
   }
 >;
 
