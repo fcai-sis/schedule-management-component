@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import TaTeachingModel from "../../data/models/taTeaching.model";
+import SemesterModel from "../../data/models/semester.model";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    semesterId: string;
     courseId: string;
     taId: string;
   }
@@ -13,8 +13,13 @@ type HandlerRequest = Request<
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { taId, courseId, semesterId } = req.body;
- console.log("taId", taId);
+  const { taId, courseId } = req.body;
+  const semesterId = await SemesterModel.findOne().sort({ createdAt: -1 }).select("_id");
+
+  if (!semesterId) {
+    return res.status(400).json({ message: "Semester not found" });
+  }
+
   const taTeaching = new TaTeachingModel({
     taId,
     courseId,

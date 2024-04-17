@@ -1,7 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { scheduleModelName } from "./schedule.model";
 import { courseModelName, hallModelName, slotModelName } from "@fcai-sis/shared-models";
-import { taTeachingModelName } from "./taTeaching.model";
 
 const sectionSchema = new mongoose.Schema({
   groupName: {
@@ -26,11 +25,6 @@ const sectionSchema = new mongoose.Schema({
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: courseModelName,
-    required: true,
-  },
-  taTeachingId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: taTeachingModelName,
     required: true,
   },
 });
@@ -66,11 +60,6 @@ sectionSchema.pre("save", async function (next) {
     const course = await mongoose.model(courseModelName).findById(this.courseId);
     if (!course) {
       throw new Error("Course not found");
-    }
-
-    const taTeaching = await mongoose.model(taTeachingModelName).findById(this.taTeachingId);
-    if (!taTeaching) {
-      throw new Error("TA Teaching not found");
     }
 
     next();
