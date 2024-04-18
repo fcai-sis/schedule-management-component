@@ -15,12 +15,30 @@ const scheduleSchema = new mongoose.Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: departmentModelName,
+    validate: {
+      validator: async function (value: string) {
+        const department = await mongoose
+          .model(departmentModelName)
+          .findById(value.toString());
+        return !!department;
+      },
+      message: "Department not found",
+    },
     required: true,
   },
 
   semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
+    validate: {
+      validator: async function (value: string) {
+        const semester = await mongoose
+          .model(semesterModelName)
+          .findById(value.toString());
+        return !!semester;
+      },
+      message: "Semester not found",
+    },
     required: true,
   },
 });
@@ -31,26 +49,3 @@ export const scheduleModelName = "Schedule";
 const ScheduleModel = mongoose.model(scheduleModelName, scheduleSchema);
 
 export default ScheduleModel;
-
-// Pre-save hook to ensure referential integrity
-scheduleSchema.pre("save", async function (next) {
-  try {
-    const semester = await mongoose
-      .model(semesterModelName)
-      .findById(this.semesterId);
-    if (!semester) {
-      throw new Error("Semester not found");
-    }
-
-    const department = await mongoose
-      .model(departmentModelName)
-      .findById(this.departmentId);
-    if (!department) {
-      throw new Error("Department not found");
-    }
-
-    next();
-  } catch (error: any) {
-    return next(error);
-  }
-});

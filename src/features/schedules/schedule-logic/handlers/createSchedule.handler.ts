@@ -11,31 +11,42 @@ type HandlerRequest = Request<
     semesterId: string;
   }
 >;
-
 /**
  * Create a schedule object which contains a semester object alongside other schedule details.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const { description, level, departmentId, semesterId } = req.body;
 
-  const schedule = new Schedule({
-    description,
-    level,
-    departmentId,
-    semesterId,
-  });
+  try {
+    const schedule = new Schedule({
+      description,
+      level,
+      departmentId,
+      semesterId,
+    });
 
-  await schedule.save();
-  const response = {
-    message: "Schedule created successfully",
-    schedule: {
-      ...schedule.toObject(),
-    },
-  };
+    // Attempt to save the schedule
+    await schedule.save();
 
-  return res.status(201).json(response);
+    // If saved successfully, send a success response
+    const response = {
+      message: "Schedule created successfully",
+      schedule: {
+        ...schedule.toObject(),
+      },
+    };
+    return res.status(201).json(response);
+  } catch (error: any) {
+    // If an error occurs during validation, send an error response
+    if (error.name === "ValidationError") {
+      const errorMessage = error.errors[Object.keys(error.errors)[0]].message;
+      return res.status(400).json({ message: errorMessage });
+    } else {
+      // For other unexpected errors, send a generic error response
+      console.error(error);
+      return res.status(500).json({ message: "Failed to create schedule" });
+    }
+  }
 };
-
 const createScheduleHandler = handler;
-
 export default createScheduleHandler;
