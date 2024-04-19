@@ -4,9 +4,16 @@ import helmet from "helmet";
 import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
-import { TaTeachingRouter, lecturesRouter, schedulesRouter, sectionsRouter, semestersRouter } from "./router";
+import {
+  TaTeachingRouter,
+  lecturesRouter,
+  schedulesRouter,
+  sectionsRouter,
+  semestersRouter,
+} from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
+import { ForeignKeyNotFound } from "./features/utils/customError.class";
 
 // Create Express server
 const app = express();
@@ -60,6 +67,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // TODO: Custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.stack);
+  // check the type of error and return the appropriate response
+  if (err instanceof ForeignKeyNotFound) {
+    return res.status(400).json({
+      message: err.message,
+      code: err.code,
+    });
+  }
   res.status(500).json({ message: "Something broke on our end" });
 });
 
