@@ -1,6 +1,7 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
 import { departmentModelName } from "@fcai-sis/shared-models";
+import { ForeignKeyNotFound } from "../../../utils/customError.class";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
@@ -15,32 +16,45 @@ const scheduleSchema = new mongoose.Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: departmentModelName,
-    validate: {
-      validator: async function (value: string) {
-        const department = await mongoose
-          .model(departmentModelName)
-          .findById(value.toString());
-        return !!department;
-      },
-      message: "Department not found",
-    },
+
     required: true,
   },
 
   semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
-    validate: {
-      validator: async function (value: string) {
-        const semester = await mongoose
-          .model(semesterModelName)
-          .findById(value.toString());
-        return !!semester;
-      },
-      message: "Semester not found",
-    },
+
     required: true,
   },
+});
+
+// Pre-save hook to ensure referential integrity
+scheduleSchema.pre("save", async function (next) {
+  try {
+    const department = await mongoose
+      .model(departmentModelName)
+      .findById(this.departmentId);
+    if (!department) {
+      throw new ForeignKeyNotFound(
+        "Department not found",
+        "foreign-key-not-found"
+      );
+    }
+
+    const semester = await mongoose
+      .model(semesterModelName)
+      .findById(this.semesterId);
+    if (!semester) {
+      throw new ForeignKeyNotFound(
+        "Semester not found",
+        "foreign-key-not-found"
+      );
+    }
+
+    next();
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 export type ScheduleType = InferSchemaType<typeof scheduleSchema>;
