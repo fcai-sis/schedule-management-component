@@ -26,13 +26,6 @@ const instructorTeachingSchema = new mongoose.Schema({
     },
 });
 
-export type InstructorTeachingType = InferSchemaType<typeof instructorTeachingSchema>;
-export const instructorTeachingModelName = "InstructorTeaching";
-
-const InstructorTeachingModel = mongoose.model(instructorTeachingModelName, instructorTeachingSchema);
-
-export default InstructorTeachingModel;
-
 // Pre-save hook to ensure referential integrity
 instructorTeachingSchema.pre("save", async function (next) {
     try {
@@ -61,3 +54,10 @@ instructorTeachingSchema.pre("save", async function (next) {
         return next(error);
     }
 });
+
+export type InstructorTeachingType = InferSchemaType<typeof instructorTeachingSchema>;
+export const instructorTeachingModelName = "InstructorTeaching";
+
+const InstructorTeachingModel = mongoose.model(instructorTeachingModelName, instructorTeachingSchema);
+
+export default InstructorTeachingModel;

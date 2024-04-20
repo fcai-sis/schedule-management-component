@@ -4,7 +4,7 @@ import { asyncHandler } from "@fcai-sis/shared-utilities";
 import ensureHallAndSlotUniqueMiddleware from "./section-logic/middlewares/ensureHallAndSlotUnique.middleware";
 import createSectionHandler from "./section-logic/handlers/createSection.handler";
 import deleteSectionHandler from "./section-logic/handlers/deleteSection.handler";
-import ensureSectionIdInParamsMiddleware from "./section-logic/middlewares/ensureSectionIdInParams.middleware";
+import ensureTaAvailbility from "./section-logic/middlewares/ensureTAAvailbility.middleware";
 
 
 const sectionsRoutes = (router: Router) => {
@@ -13,7 +13,7 @@ const sectionsRoutes = (router: Router) => {
 
         ensureHallAndSlotUniqueMiddleware,
 
-        ensureSectionIdInParamsMiddleware,
+        ensureTaAvailbility,
 
         asyncHandler(createSectionHandler)
     );

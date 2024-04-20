@@ -22,15 +22,7 @@ const semesterSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     }
-    });
-
-export type SemesterType = InferSchemaType<typeof semesterSchema>;
-export const semesterModelName = "Semester";
-
-const SemesterModel = mongoose.model(semesterModelName, semesterSchema);
-
-export default SemesterModel;
-
+});
 
 // Pre-save hook to ensure referential integrity
 semesterSchema.pre("save", async function (next) {
@@ -47,3 +39,11 @@ semesterSchema.pre("save", async function (next) {
         return next(error);
     }
 });
+
+export type SemesterType = InferSchemaType<typeof semesterSchema>;
+export const semesterModelName = "Semester";
+
+const SemesterModel = mongoose.model(semesterModelName, semesterSchema);
+
+export default SemesterModel;
+

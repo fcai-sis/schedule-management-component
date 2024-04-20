@@ -8,19 +8,13 @@ const sectionTeachingsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: taTeachingModelName,
         required: true,
-      },
+    },
     sectionId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: sectionModelName,
         required: true,
     },
 });
-
-export type sectionTeachingsType = InferSchemaType<typeof sectionTeachingsSchema>;
-export const sectionTeachingsModelName = "SectionTeachings";
-
-const sectionTeachingsModel = mongoose.model(sectionTeachingsModelName, sectionTeachingsSchema);
-export default sectionTeachingsModel;
 
 // Pre-save hook to ensure referential integrity
 sectionTeachingsSchema.pre("save", async function (next) {
@@ -41,3 +35,9 @@ sectionTeachingsSchema.pre("save", async function (next) {
         return next(error);
     }
 });
+
+export type sectionTeachingsType = InferSchemaType<typeof sectionTeachingsSchema>;
+export const sectionTeachingsModelName = "SectionTeachings";
+
+const SectionTeachingsModel = mongoose.model(sectionTeachingsModelName, sectionTeachingsSchema);
+export default SectionTeachingsModel;
