@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import SectionModel from "../../data/models/section.model";
 import TaTeachingModel from "../../data/models/taTeaching.model";
+import sectionTeachingsModel from "features/schedules/data/models/sectionTeachings.model";
 
 
 const ensureTA = async (
@@ -23,9 +24,14 @@ const ensureTA = async (
   const taId = teachingId.taId;
   const teachingIds = await TaTeachingModel.find({ taId, semesterId });
   for (const teachingId of teachingIds) {
-    const section = await SectionModel.findOne({ slotId, TaTeachingId: teachingId._id });
-    if (section) {
-      return res.status(400).json({ message: "TA is busy at this time" });
+    const sections = await sectionTeachingsModel.find({
+      taTeachingId: teachingId._id,
+    });
+    for (const section of sections) {
+      const sectionData = await SectionModel.findById(section.sectionId);
+      if (sectionData && sectionData.slotId.toString() === slotId) {
+        return res.status(400).json({ message: "TA is busy at this time" });
+      }
     }
   }
   next();

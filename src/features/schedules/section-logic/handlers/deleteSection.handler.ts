@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import SectionModel from "../../data/models/section.model";
+import sectionTeachingsModel from "../../data/models/sectionTeachings.model";
 
 type HandlerRequest = Request<{ sectionId: string }, {}, {}>;
 
@@ -10,6 +11,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const sectionId = req.params.sectionId;
 
   const section = await SectionModel.findByIdAndDelete(sectionId);
+  await sectionTeachingsModel.deleteMany({
+    sectionId,
+  });
 
   if (!section) {
     return res.status(404).json({
