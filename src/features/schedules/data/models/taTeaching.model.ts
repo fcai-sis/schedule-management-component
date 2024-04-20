@@ -21,13 +21,6 @@ const taTeachingSchema = new mongoose.Schema({
     },
 });
 
-export type TaTeachingType = InferSchemaType<typeof taTeachingSchema>;
-export const taTeachingModelName = "TaTeaching";
-
-const TaTeachingModel = mongoose.model(taTeachingModelName, taTeachingSchema);
-
-export default TaTeachingModel;
-
 // Pre-save hook to ensure referential integrity
 taTeachingSchema.pre("save", async function (next) {
     try {
@@ -51,3 +44,10 @@ taTeachingSchema.pre("save", async function (next) {
         return next(error);
     }
 });
+
+export type TaTeachingType = InferSchemaType<typeof taTeachingSchema>;
+export const taTeachingModelName = "TaTeaching";
+
+const TaTeachingModel = mongoose.model(taTeachingModelName, taTeachingSchema);
+
+export default TaTeachingModel;
