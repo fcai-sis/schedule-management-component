@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
 import { departmentModelName } from "@fcai-sis/shared-models";
-import { ForeignKeyNotFound } from "../../../utils/customError.class";
+import { ForeignKeyNotFound } from "../../../utils/customError.exception";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
