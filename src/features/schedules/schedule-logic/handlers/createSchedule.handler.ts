@@ -11,7 +11,6 @@ type HandlerRequest = Request<
     semesterId: string;
   }
 >;
-
 /**
  * Create a schedule object which contains a semester object alongside other schedule details.
  */
@@ -26,16 +25,14 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 
   await schedule.save();
+
   const response = {
     message: "Schedule created successfully",
     schedule: {
       ...schedule.toObject(),
     },
   };
-
   return res.status(201).json(response);
 };
-
 const createScheduleHandler = handler;
-
 export default createScheduleHandler;
