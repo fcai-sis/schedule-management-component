@@ -13,7 +13,7 @@ import {
 } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
-import { ForeignKeyNotFound } from "./features/utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 // Create Express server
 const app = express();
