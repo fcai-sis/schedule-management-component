@@ -1,5 +1,5 @@
 import { courseModelName } from "@fcai-sis/shared-models";
-import { ForeignKeyNotFound } from "../../../utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 import mongoose, { InferSchemaType } from "mongoose";
 
 // A semester basically consists of a year and a semester type (e.g. "Fall", "Spring", "Summer").
@@ -32,10 +32,7 @@ semesterSchema.pre("save", async function (next) {
       .model(courseModelName)
       .find({ _id: { $in: this.courseIds } });
     if (courses.length !== this.courseIds.length) {
-      throw new ForeignKeyNotFound(
-        "Some courses not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Some courses not found");
     }
 
     next();

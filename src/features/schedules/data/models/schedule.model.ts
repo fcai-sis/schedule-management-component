@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
 import { departmentModelName } from "@fcai-sis/shared-models";
-import { ForeignKeyNotFound } from "../../../utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
@@ -35,20 +35,14 @@ scheduleSchema.pre("save", async function (next) {
       .model(departmentModelName)
       .findById(this.departmentId);
     if (!department) {
-      throw new ForeignKeyNotFound(
-        "Department not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Department not found");
     }
 
     const semester = await mongoose
       .model(semesterModelName)
       .findById(this.semesterId);
     if (!semester) {
-      throw new ForeignKeyNotFound(
-        "Semester not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Semester not found");
     }
 
     next();

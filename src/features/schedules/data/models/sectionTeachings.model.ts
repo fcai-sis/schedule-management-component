@@ -1,7 +1,7 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { sectionModelName } from "./section.model";
 import { taTeachingModelName } from "./taTeaching.model";
-import { ForeignKeyNotFound } from "../../../utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const sectionTeachingsSchema = new mongoose.Schema({
   taTeachingId: {
@@ -23,20 +23,14 @@ sectionTeachingsSchema.pre("save", async function (next) {
       .model(taTeachingModelName)
       .findById(this.taTeachingId);
     if (!taTeaching) {
-      throw new ForeignKeyNotFound(
-        "TA Teaching not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("TA Teaching not found");
     }
 
     const section = await mongoose
       .model(sectionModelName)
       .findById(this.sectionId);
     if (!section) {
-      throw new ForeignKeyNotFound(
-        "Section not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Section not found");
     }
 
     next();

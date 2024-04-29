@@ -5,7 +5,7 @@ import {
   hallModelName,
   slotModelName,
 } from "@fcai-sis/shared-models";
-import { ForeignKeyNotFound } from "../../../utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const lectureSchema = new mongoose.Schema({
   scheduleId: {
@@ -37,27 +37,24 @@ lectureSchema.pre("save", async function (next) {
       .model(scheduleModelName)
       .findById(this.scheduleId);
     if (!schedule) {
-      throw new ForeignKeyNotFound(
-        "Schedule not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Schedule not found");
     }
 
     const hall = await mongoose.model(hallModelName).findById(this.hallId);
     if (!hall) {
-      throw new ForeignKeyNotFound("Hall not found", "foreign-key-not-found");
+      throw new ForeignKeyNotFound("Hall not found");
     }
 
     const slot = await mongoose.model(slotModelName).findById(this.slotId);
     if (!slot) {
-      throw new ForeignKeyNotFound("Slot not found", "foreign-key-not-found");
+      throw new ForeignKeyNotFound("Slot not found");
     }
 
     const course = await mongoose
       .model(courseModelName)
       .findById(this.courseId);
     if (!course) {
-      throw new ForeignKeyNotFound("Course not found", "foreign-key-not-found");
+      throw new ForeignKeyNotFound("Course not found");
     }
   } catch (error: any) {
     return next(error);

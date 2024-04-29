@@ -4,7 +4,7 @@ import {
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
 import { semesterModelName } from "./semester.model";
-import { ForeignKeyNotFound } from "../../../utils/customError.exception";
+import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const taTeachingSchema = new mongoose.Schema({
   taId: {
@@ -31,24 +31,21 @@ taTeachingSchema.pre("save", async function (next) {
       .model(teacherAssistantModelName)
       .findById(this.taId);
     if (!ta) {
-      throw new ForeignKeyNotFound("TA not found", "foreign-key-not-found");
+      throw new ForeignKeyNotFound("TA not found");
     }
 
     const course = await mongoose
       .model(courseModelName)
       .findById(this.courseId);
     if (!course) {
-      throw new ForeignKeyNotFound("Course not found", "foreign-key-not-found");
+      throw new ForeignKeyNotFound("Course not found");
     }
 
     const semester = await mongoose
       .model(semesterModelName)
       .findById(this.semesterId);
     if (!semester) {
-      throw new ForeignKeyNotFound(
-        "Semester not found",
-        "foreign-key-not-found"
-      );
+      throw new ForeignKeyNotFound("Semester not found");
     }
 
     next();
