@@ -5,11 +5,6 @@ import logger from "../../../../core/logger";
 
 /**
  * Validates the request body of the Create course endpoint.
- *
- *   "description": "some text",
-  "level": 1,
-  "departmentId": "661c0b91c3045b72ddf2f097",
-  "semesterId": "661c0b91c3045b72ddf2f097"
  */
 const validateCreateScheduleRequestMiddleware = [
   validator.body("description")
