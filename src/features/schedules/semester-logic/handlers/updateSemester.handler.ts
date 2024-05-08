@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Semester from "../../data/models/semester.model";
+import { SemesterModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {
@@ -19,7 +19,7 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const semesterId = req.params.semesterId;
 
-  const semester = await Semester.findByIdAndUpdate(
+  const semester = await SemesterModel.findByIdAndUpdate(
     semesterId,
     { ...req.body },
     { new: true }

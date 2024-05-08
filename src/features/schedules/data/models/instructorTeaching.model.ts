@@ -1,10 +1,10 @@
 import {
   courseModelName,
+  semesterModelName,
   teacherAssistantModelName,
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
 // import { sectionModelName } from "./section.model";
-import { semesterModelName } from "./semester.model";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const instructorTeachingSchema = new mongoose.Schema({
