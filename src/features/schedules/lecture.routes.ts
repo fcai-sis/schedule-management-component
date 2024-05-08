@@ -8,20 +8,20 @@ import ensureInstructorAvailbility from "./lecture-logic/middlewares/ensureInstr
 
 
 const lecturesRoutes = (router: Router) => {
-    router.post(
-        "/",
+  router.post(
+    "/",
 
-        ensureHallAndSlotUnique,
-        ensureInstructorAvailbility,
+    ensureHallAndSlotUnique,
+    ensureInstructorAvailbility,
 
-        asyncHandler(createLectureHandler)
-    );
+    asyncHandler(createLectureHandler)
+  );
 
-    router.delete(
-        "/:lectureId",
+  router.delete(
+    "/:lectureId",
 
-        asyncHandler(deleteLectureHandler)
-    );
+    asyncHandler(deleteLectureHandler)
+  );
 };
 
 export default lecturesRoutes;

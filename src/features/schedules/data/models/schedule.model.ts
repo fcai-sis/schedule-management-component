@@ -1,7 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
-import { semesterModelName } from "./semester.model";
-import { departmentModelName } from "@fcai-sis/shared-models";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
+import { departmentModelName, semesterModelName } from "@fcai-sis/shared-models";
 
 const scheduleSchema = new mongoose.Schema({
   description: {
@@ -16,20 +15,17 @@ const scheduleSchema = new mongoose.Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: departmentModelName,
-
     required: true,
   },
-
   semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
-
     required: true,
   },
 });
 
 // Pre-save hook to ensure referential integrity
-scheduleSchema.pre("save", async function (next) {
+scheduleSchema.pre("save", async function(next) {
   try {
     const department = await mongoose
       .model(departmentModelName)

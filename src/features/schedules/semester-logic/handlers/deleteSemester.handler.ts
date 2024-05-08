@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Semester from "../../data/models/semester.model";
+import { SemesterModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{ semesterId: string }, {}, {}>;
 
@@ -9,7 +9,7 @@ type HandlerRequest = Request<{ semesterId: string }, {}, {}>;
 const handler = async (req: HandlerRequest, res: Response) => {
   const semesterId = req.params.semesterId;
 
-  const semester = await Semester.findByIdAndDelete(semesterId);
+  const semester = await SemesterModel.findByIdAndDelete(semesterId);
 
   if (!semester) {
     return res.status(404).json({

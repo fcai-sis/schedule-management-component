@@ -6,6 +6,7 @@ import {
   slotModelName,
 } from "@fcai-sis/shared-models";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
+import { instructorTeachingModelName } from "./instructorTeaching.model";
 
 const lectureSchema = new mongoose.Schema({
   scheduleId: {
@@ -23,15 +24,15 @@ const lectureSchema = new mongoose.Schema({
     ref: slotModelName,
     required: true,
   },
-  courseId: {
+  teachingId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: courseModelName,
+    ref: instructorTeachingModelName,
     required: true,
   },
 });
 
 // Pre-save hook to ensure referential integrity
-lectureSchema.pre("save", async function (next) {
+lectureSchema.pre("save", async function(next) {
   try {
     const schedule = await mongoose
       .model(scheduleModelName)
@@ -50,12 +51,12 @@ lectureSchema.pre("save", async function (next) {
       throw new ForeignKeyNotFound("Slot not found");
     }
 
-    const course = await mongoose
-      .model(courseModelName)
-      .findById(this.courseId);
-    if (!course) {
-      throw new ForeignKeyNotFound("Course not found");
-    }
+    // const course = await mongoose
+    //   .model(courseModelName)
+    //   .findById(this.courseId);
+    // if (!course) {
+    //   throw new ForeignKeyNotFound("Course not found");
+    // }
   } catch (error: any) {
     return next(error);
   }

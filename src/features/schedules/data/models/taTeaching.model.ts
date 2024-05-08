@@ -1,9 +1,9 @@
 import {
   courseModelName,
+  semesterModelName,
   teacherAssistantModelName,
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
-import { semesterModelName } from "./semester.model";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const taTeachingSchema = new mongoose.Schema({
@@ -25,7 +25,7 @@ const taTeachingSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to ensure referential integrity
-taTeachingSchema.pre("save", async function (next) {
+taTeachingSchema.pre("save", async function(next) {
   try {
     const ta = await mongoose
       .model(teacherAssistantModelName)

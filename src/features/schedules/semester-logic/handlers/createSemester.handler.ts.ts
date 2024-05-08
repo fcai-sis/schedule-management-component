@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Semester from "../../data/models/semester.model";
+import { SemesterModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
@@ -17,7 +17,7 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const { year, semesterType, courseIds } = req.body;
 
-  const semester = new Semester({
+  const semester = new SemesterModel({
     year,
     semesterType,
     courseIds,
