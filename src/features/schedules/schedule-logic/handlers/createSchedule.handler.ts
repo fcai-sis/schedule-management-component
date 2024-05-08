@@ -30,6 +30,8 @@ const handler = async (req: HandlerRequest, res: Response) => {
     message: "Schedule created successfully",
     schedule: {
       ...schedule.toObject(),
+      _id: undefined,
+      __v: undefined,
     },
   };
   return res.status(201).json(response);
