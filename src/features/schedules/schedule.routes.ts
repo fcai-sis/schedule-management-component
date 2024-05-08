@@ -8,6 +8,7 @@ import getScheduleHandler from "./schedule-logic/handlers/getSchedule.handler.js
 import updateScheduleHandler from "./schedule-logic/handlers/updateSchedule.handler.js";
 import { Role, checkRole } from "@fcai-sis/shared-middlewares";
 import getCustomTeachingScheduleHandler from "./schedule-logic/handlers/getCustomSchedule.handler.js";
+import getStudentScheduleHandler from "./schedule-logic/handlers/getStudentSchedule.handler.js";
 
 const schedulesRoutes = (router: Router) => {
   router.post(
