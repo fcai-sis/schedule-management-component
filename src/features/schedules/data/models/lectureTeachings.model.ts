@@ -17,7 +17,7 @@ const lectureTeachingsSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to ensure referential integrity
-lectureTeachingsSchema.pre("save", async function (next) {
+lectureTeachingsSchema.pre("save", async function(next) {
   try {
     const taTeaching = await mongoose
       .model(instructorTeachingModelName)
