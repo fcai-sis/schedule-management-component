@@ -9,10 +9,13 @@ import updateScheduleHandler from "./schedule-logic/handlers/updateSchedule.hand
 import { Role, checkRole } from "@fcai-sis/shared-middlewares";
 import getCustomTeachingScheduleHandler from "./schedule-logic/handlers/getCustomSchedule.handler.js";
 import getStudentScheduleHandler from "./schedule-logic/handlers/getStudentSchedule.handler.js";
+import validateCreateScheduleRequestMiddleware from "./schedule-logic/middlewares/createSchedule.middleware.js";
 
 const schedulesRoutes = (router: Router) => {
   router.post(
     "/",
+
+    validateCreateScheduleRequestMiddleware,
 
     asyncHandler(createScheduleHandler)
   );
