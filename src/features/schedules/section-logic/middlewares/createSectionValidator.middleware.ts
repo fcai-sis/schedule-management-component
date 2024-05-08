@@ -29,7 +29,7 @@ const createSectionValdiatorMiddleware = [
     .isMongoId()
     .withMessage("courseId must be a valid mongo id"),
     validator
-    .body("taTeachingId")
+    .body("teachingId")
     .exists()
     .isMongoId()
     .withMessage("TaTeachingId must be a valid mongo id"),
