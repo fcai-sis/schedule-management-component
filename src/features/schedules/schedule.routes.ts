@@ -47,6 +47,10 @@ const schedulesRoutes = (router: Router) => {
     asyncHandler(getStudentScheduleHandler)
   );
 
+  // TODO: Create a filterable endpoint for the schedule
+
+  // TODO: Create a delete endpoint for the schedule?
+
   router.patch("/:scheduleId", asyncHandler(updateScheduleHandler));
 };
 
