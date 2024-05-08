@@ -62,12 +62,12 @@ sectionSchema.pre("save", async function(next) {
       throw new ForeignKeyNotFound("Slot not found");
     }
 
-    const course = await mongoose
-      .model(courseModelName)
-      .findById(this.courseId);
-    if (!course) {
-      throw new ForeignKeyNotFound("Course not found");
-    }
+    // const course = await mongoose
+    //   .model(courseModelName)
+    //   .findById(this.courseId);
+    // if (!course) {
+    //   throw new ForeignKeyNotFound("Course not found");
+    // }
 
     next();
   } catch (error: any) {

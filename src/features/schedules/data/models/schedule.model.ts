@@ -16,14 +16,11 @@ const scheduleSchema = new mongoose.Schema({
   departmentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: departmentModelName,
-
     required: true,
   },
-
   semesterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: semesterModelName,
-
     required: true,
   },
 });
