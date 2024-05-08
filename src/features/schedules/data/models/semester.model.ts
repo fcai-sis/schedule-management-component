@@ -26,7 +26,7 @@ const semesterSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to ensure referential integrity
-semesterSchema.pre("save", async function (next) {
+semesterSchema.pre("save", async function(next) {
   try {
     const courses = await mongoose
       .model(courseModelName)

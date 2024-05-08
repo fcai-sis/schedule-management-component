@@ -29,7 +29,7 @@ const scheduleSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to ensure referential integrity
-scheduleSchema.pre("save", async function (next) {
+scheduleSchema.pre("save", async function(next) {
   try {
     const department = await mongoose
       .model(departmentModelName)
