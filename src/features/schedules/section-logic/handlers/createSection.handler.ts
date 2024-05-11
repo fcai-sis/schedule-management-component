@@ -8,7 +8,6 @@ type HandlerRequest = Request<
     scheduleId: string;
     hallId: string;
     slotId: string;
-    courseId: string;
     teachingId: string;
   }
 >;
@@ -16,14 +15,13 @@ type HandlerRequest = Request<
 //TODO: in delete section, delete all sectionTeachings with sectionId, in update section, update sectionTeachings with sectionId, in get section, get sectionTeachings with sectionId and populate taTeachingId with taTeaching
 //TODO: do the same for lecture and check middleware for section and lecture
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, hallId, slotId, courseId, teachingId } = req.body;
+  const { scheduleId, hallId, slotId, teachingId } = req.body;
 
 
   const section = new SectionModel({
     scheduleId,
     hallId,
     slotId,
-    courseId,
     teachingId
   });
 

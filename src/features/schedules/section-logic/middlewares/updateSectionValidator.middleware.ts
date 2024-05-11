@@ -23,11 +23,6 @@ const updateSectionValidatorMiddleware = [
         .optional()
         .isMongoId()
         .withMessage("slotId must be a valid mongo id"),
-    validator
-        .body("courseId")
-        .optional()
-        .isMongoId()
-        .withMessage("courseId must be a valid mongo id"),
     (req: Request, res: Response, next: NextFunction) => {
         const errors = validator.validationResult(req);
         if (!errors.isEmpty()) {

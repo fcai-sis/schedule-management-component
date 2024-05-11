@@ -8,20 +8,18 @@ type HandlerRequest = Request<
     scheduleId: string;
     hallId: string;
     slotId: string;
-    courseId: string;
     teachingId: string;
   }
 >;
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, hallId, slotId, courseId, teachingId } = req.body;
+  const { scheduleId, hallId, slotId, teachingId } = req.body;
 
   const lecture = new LectureModel({
     scheduleId,
     hallId,
     slotId,
-    courseId,
     teachingId
   });
 
