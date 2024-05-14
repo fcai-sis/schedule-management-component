@@ -23,15 +23,10 @@ const ensureTaAvailbility = async (
   const semesterId = teachingId.semesterId;
   const taId = teachingId.taId;
   const teachingIds = await TaTeachingModel.find({ taId, semesterId });
-  for (const teachingId of teachingIds) {
-    const sectionTeachings = await sectionTeachingsModel.find({
-      taTeachingId: teachingId._id,
-    });
-    for (const sectionTeaching of sectionTeachings) {
-      const sectionData = await SectionModel.findById(sectionTeaching.sectionId);
-      if (sectionData && sectionData.slotId.toString() === slotId) {
-        return res.status(400).json({ message: "TA is busy at this time" });
-      }
+  const sections = await SectionModel.find({ teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) } });
+  for (const section of sections) {
+    if (section.slotId.toString() === slotId) {
+      return res.status(400).json({ message: "Ta is busy at this time" });
     }
   }
   next();

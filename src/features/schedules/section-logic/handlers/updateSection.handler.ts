@@ -11,7 +11,7 @@ type HandlerRequest = Request<
     scheduleId?: string;
     hallId?: string;
     slotId?: string;
-    courseId?: string;
+    teachingId?: string;
   }
 >;
 
@@ -21,9 +21,16 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const sectionId = req.params.sectionId;
 
+  const { scheduleId, hallId, slotId, teachingId } = req.body;
+
   const section = await SectionModel.findByIdAndUpdate(
     sectionId,
-    { ...req.body },
+    {
+      ...(scheduleId && { scheduleId }),
+      ...(hallId && { hallId }),
+      ...(slotId && { slotId }),
+      ...(teachingId && { teachingId }),
+    },
     { new: true }
   );
 

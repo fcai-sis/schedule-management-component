@@ -1,23 +1,18 @@
 import {
   courseModelName,
+  instructorModelName,
   semesterModelName,
   teacherAssistantModelName,
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
-// import { sectionModelName } from "./section.model";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 
 const instructorTeachingSchema = new mongoose.Schema({
   instructorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: teacherAssistantModelName,
+    ref: instructorModelName,
     required: true,
   },
-  // sectionId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: sectionModelName,
-  //   required: true,
-  // },
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: courseModelName,
@@ -34,18 +29,11 @@ const instructorTeachingSchema = new mongoose.Schema({
 instructorTeachingSchema.pre("save", async function(next) {
   try {
     const instructor = await mongoose
-      .model(teacherAssistantModelName)
+      .model(instructorModelName)
       .findById(this.instructorId);
     if (!instructor) {
       throw new ForeignKeyNotFound("Instructor not found");
     }
-
-    // const section = await mongoose
-    //   .model(sectionModelName)
-    //   .findById(this.sectionId);
-    // if (!section) {
-    //   throw new ForeignKeyNotFound("Section not found");
-    // }
 
     const course = await mongoose
       .model(courseModelName)
