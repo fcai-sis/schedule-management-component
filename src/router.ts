@@ -1,10 +1,11 @@
 import { Router } from "express";
 
-import schedulesRoutes from "./features/schedules/schedule.routes.js";
-import semestersRoutes from "./features/schedules/semester.routes.js";
-import lecturesRoutes from "./features/schedules/lecture.routes.js";
-import sectionsRoutes from "./features/schedules/section.routes.js";
-import taTeachingRoutes from "./features/schedules/taTeaching.routes.js";
+import schedulesRoutes from "./features/schedules/schedule.routes";
+import semestersRoutes from "./features/schedules/semester.routes";
+import lecturesRoutes from "./features/schedules/lecture.routes";
+import sectionsRoutes from "./features/schedules/section.routes";
+import taTeachingRoutes from "./features/schedules/taTeaching.routes";
+import intstuctorTeachingRoutes from "./features/schedules/instructorTeaching.routes";
 
 export const schedulesRouter = (): Router => {
   const router = Router();
@@ -33,5 +34,11 @@ export const sectionsRouter = (): Router => {
 export const TaTeachingRouter = (): Router => {
   const router = Router();
   taTeachingRoutes(router);
+  return router;
+}
+
+export const InstructorTeachingRouter = (): Router => {
+  const router = Router();
+  intstuctorTeachingRoutes(router);
   return router;
 }

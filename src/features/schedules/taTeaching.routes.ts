@@ -10,7 +10,7 @@ import getTaTeachingByIdHandler from "./taTeaching-logic/handlers/getTaTeachingB
 import deleteTaTeachingHandler from "./lecture-logic/handlers/deleteLecture.handler";
 
 
-const TaTeachingRoutes =  (router: Router) => {
+const taTeachingRoutes =  (router: Router) => {
   router.post(
     "/",
 
@@ -46,4 +46,4 @@ router.delete(
 );
 };
 
-export default TaTeachingRoutes;
+export default taTeachingRoutes;

@@ -5,6 +5,8 @@ import ensureHallAndSlotUniqueMiddleware from "./section-logic/middlewares/ensur
 import createSectionHandler from "./section-logic/handlers/createSection.handler";
 import deleteSectionHandler from "./section-logic/handlers/deleteSection.handler";
 import ensureTaAvailbility from "./section-logic/middlewares/ensureTaAvailbility.middleware";
+import updateSectionHandler from "./section-logic/handlers/updateSection.handler";
+import ensureSectionIdInParamsMiddleware from "./section-logic/middlewares/ensureSectionIdInParams.middleware";
 
 
 const sectionsRoutes = (router: Router) => {
@@ -18,6 +20,17 @@ const sectionsRoutes = (router: Router) => {
         asyncHandler(createSectionHandler)
     );
 
+    router.patch(
+        "/:sectionId",
+
+        ensureHallAndSlotUniqueMiddleware,
+
+        ensureTaAvailbility,
+
+        ensureSectionIdInParamsMiddleware,
+
+        asyncHandler(updateSectionHandler)
+    );
     router.delete(
         "/:sectionId",
 
