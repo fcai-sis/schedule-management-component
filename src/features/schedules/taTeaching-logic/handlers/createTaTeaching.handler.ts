@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
+import { SemesterModel, TaTeachingModel } from "@fcai-sis/shared-models";
 
-import TaTeachingModel from "../../data/models/taTeaching.model";
 
 type HandlerRequest = Request<
   {},
