@@ -1,4 +1,4 @@
-import { InstructorTeachingModel } from "@fcai-sis/shared-models";
+import { InstructorTeachingModel, LectureModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 type HandlerRequest = Request<{ instructorTeachingId: string }, {}, {}>;
@@ -9,35 +9,42 @@ type HandlerRequest = Request<{ instructorTeachingId: string }, {}, {}>;
 const handler = async (req: HandlerRequest, res: Response) => {
   const instructorTeachingId = req.params.instructorTeachingId;
 
-  const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId);
+  try {
+    // Find the Instructor teaching
+    const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId);
 
-  if (!instructorTeaching) {
-    return res.status(404).json({
-      error: {
-        message: "Instructor teaching not found",
+    // If Instructor teaching not found, return 404
+    if (!instructorTeaching) {
+      return res.status(404).json({
+        error: {
+          message: "Instructor teaching not found",
+        },
+      });
+    }
+
+    await LectureModel.deleteMany({ teachingId: instructorTeachingId });
+
+    // Delete the Instructor teaching
+    await instructorTeaching.deleteOne();
+
+    const response = {
+      message: "Instructor teaching deleted successfully",
+      instructorTeaching: {
+        ...instructorTeaching.toObject(),
       },
-    });
-  }
+    };
 
-  const deletedLecture = await instructorTeaching.deleteOne();
-
-  if (!deletedLecture) {
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error("Error deleting Instructor teaching:", error);
     return res.status(500).json({
       error: {
-        message: "Failed to delete instructor teaching",
+        message: "Internal server error",
       },
     });
   }
-
-  const response = {
-    message: "Instructor teaching deleted successfully",
-    instructorTeaching: {
-      ...instructorTeaching.toObject(),
-    },
-  };
-
-  return res.status(200).json(response);
 };
 
 const deleteInstructorTeachingHandler = handler;
+
 export default deleteInstructorTeachingHandler;

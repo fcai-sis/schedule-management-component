@@ -7,15 +7,11 @@ const ensureInstructorAvailbility = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { instructorTeachingId, slotId, courseId } = req.body;
-  const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId);
+  const { teachingId, slotId } = req.body;
+  const instructorTeaching = await InstructorTeachingModel.findById(teachingId);
 
   if (!instructorTeaching) {
     return res.status(400).json({ message: "Instructor teaching id not found" });
-  }
-
-  if (instructorTeaching.courseId.toString() !== courseId) {
-    return res.status(400).json({ message: "Course id does not match" });
   }
 
   const semesterId = instructorTeaching.semesterId;
