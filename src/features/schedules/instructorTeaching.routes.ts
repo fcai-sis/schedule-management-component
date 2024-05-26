@@ -8,6 +8,9 @@ import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
 import getPaginatedInstructorTeachingHandler from "./instructorTeaching-logic/handlers/getPaginatedInstructorTeaching.handler";
 import getInstructorTeachingByIdHandler from "./instructorTeaching-logic/handlers/getInstructorTeachingById.handler";
 import deleteInstructorTeachingHandler from "./instructorTeaching-logic/handlers/deleteInstructorTeaching.handler";
+import ensureInstructorTeachingIdInParamsMiddleware from "./instructorTeaching-logic/middlewares/ensureInstructorTeachingIdInParams.middleware";
+import checkCourseAvailabilityMiddleware from "./instructorTeaching-logic/middlewares/checkCourseAvailability.middleware";
+import updateInstructorTeachingHandler from "./instructorTeaching-logic/handlers/updateInstructorTeaching.handler";
 
 
 const intstuctorTeachingRoutes = (router: Router) => {
@@ -15,6 +18,8 @@ const intstuctorTeachingRoutes = (router: Router) => {
     "/",
 
     createInstructorTeachingValidatorMiddleware,
+
+    checkCourseAvailabilityMiddleware,
 
     asyncHandler(createInstructorTeachingHandler)
   );
@@ -39,8 +44,20 @@ const intstuctorTeachingRoutes = (router: Router) => {
     asyncHandler(getInstructorTeachingByIdHandler)
   );
 
+  router.patch(
+    "/:instructorTeachingId",
+
+    ensureInstructorTeachingIdInParamsMiddleware,
+
+    checkCourseAvailabilityMiddleware,
+
+    asyncHandler(updateInstructorTeachingHandler)
+  );
+
   router.delete(
     "/:instructorTeachingId",
+
+    ensureInstructorTeachingIdInParamsMiddleware,
 
     asyncHandler(deleteInstructorTeachingHandler)
   );

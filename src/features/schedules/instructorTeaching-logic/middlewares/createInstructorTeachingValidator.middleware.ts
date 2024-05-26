@@ -13,11 +13,6 @@ const createInstructorTeachingValidatorMiddleware = [
     .exists()
     .isMongoId()
     .withMessage("courseId must be a valid mongo id"),
-  validator
-    .body("semesterId")
-    .exists()
-    .isMongoId()
-    .withMessage("smesterId must be a valid mongo id"),
   
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validator.validationResult(req);
