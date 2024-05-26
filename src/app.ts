@@ -5,6 +5,7 @@ import compression from "compression";
 import express, { NextFunction, Request, Response } from "express";
 
 import {
+  InstructorTeachingRouter,
   TaTeachingRouter,
   lecturesRouter,
   schedulesRouter,
@@ -58,6 +59,7 @@ app.use("/semesters", semestersRouter());
 app.use("/lectures", lecturesRouter());
 app.use("/sections", sectionsRouter());
 app.use("/taTeaching", TaTeachingRouter());
+app.use("/instructorTeaching", InstructorTeachingRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {

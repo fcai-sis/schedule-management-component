@@ -1,19 +1,22 @@
 import { Request, Response } from "express";
 import SectionModel from "../../data/models/section.model";
-import sectionTeachingsModel from "../../data/models/sectionTeachings.model";
 
-type HandlerRequest = Request<{ sectionId: string }, {}, {}>;
+
+type HandlerRequest = Request<
+  {
+    sectionId: string;
+  },
+  {},
+  {}
+>;
 
 /**
- * Delete a Section by its id.
+ * delete a section object.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const sectionId = req.params.sectionId;
 
   const section = await SectionModel.findByIdAndDelete(sectionId);
-  await sectionTeachingsModel.deleteMany({
-    sectionId,
-  });
 
   if (!section) {
     return res.status(404).json({
@@ -34,4 +37,5 @@ const handler = async (req: HandlerRequest, res: Response) => {
 };
 
 const deleteSectionHandler = handler;
+
 export default deleteSectionHandler;

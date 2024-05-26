@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { Role, TokenPayload } from "@fcai-sis/shared-middlewares";
-import { InstructorModel, TeacherAssistantModel, SemesterModel } from "@fcai-sis/shared-models";
+import { InstructorModel, SemesterModel, InstructorTeachingModel, TaTeachingModel, TeachingAssistantModel } from "@fcai-sis/shared-models";
 
 import LectureModel from "../../data/models/lecture.model";
 import SectionModel from "../../data/models/section.model";
-import TaTeachingModel from "../../data/models/taTeaching.model";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
 
 type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
 
@@ -13,7 +11,7 @@ type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
  * Get the custom schedule for the user based on their role, either instructor or TA
  */
 const getCustomTeachingScheduleHandler = async (req: HandlerRequest, res: Response) => {
-  const { user: { userId, role } } = req.body;
+  const { user: { id, role } } = req.body;
 
   // Find the latest semseter, sort by createdAt and get the first result
   const currentSemester = await SemesterModel.findOne().sort('-createdAt');
@@ -28,7 +26,7 @@ const getCustomTeachingScheduleHandler = async (req: HandlerRequest, res: Respon
   // Get the instructor/TA/Student _id depending on the role
   switch (role) {
     case Role.INSTUCTOR:
-      const instructor = await InstructorModel.findOne({ userId });
+      const instructor = await InstructorModel.findOne({ id });
 
       if (!instructor) {
         res.status(404).send("Instructor not found");
@@ -41,7 +39,7 @@ const getCustomTeachingScheduleHandler = async (req: HandlerRequest, res: Respon
       break;
 
     case Role.TEACHING_ASSISTANT:
-      const ta = await TeacherAssistantModel.findOne({ userId });
+      const ta = await TeachingAssistantModel.findOne({ id });
 
       if (!ta) {
         res.status(404).send("TA not found");

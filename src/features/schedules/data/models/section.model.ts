@@ -1,12 +1,11 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { scheduleModelName } from "./schedule.model";
 import {
-  courseModelName,
   hallModelName,
   slotModelName,
+  taTeachingModelName,
 } from "@fcai-sis/shared-models";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
-import { taTeachingModelName } from "./taTeaching.model";
 
 const sectionSchema = new mongoose.Schema({
   groupName: {
