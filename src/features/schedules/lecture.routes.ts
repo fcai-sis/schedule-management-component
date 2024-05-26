@@ -3,10 +3,10 @@ import { Router } from "express";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import createLectureHandler from "./lecture-logic/handlers/createLecture.handler";
 import ensureHallAndSlotUnique from "./lecture-logic/middlewares/ensureHallAndSlotUnique.middleware";
-import deleteLectureHandler from "./lecture-logic/handlers/deleteLecture.handler";
 import ensureInstructorAvailbility from "./lecture-logic/middlewares/ensureInstructorAvailbility.middleware";
 import ensureLectureIdInParamsMiddleware from "./lecture-logic/middlewares/ensureLectureIdInParams.middleware";
 import updateLectureHandler from "./lecture-logic/handlers/updateLecture.handler";
+import deleteLectureHandler from "./lecture-logic/handlers/deleteLecture.handler";
 
 
 const lecturesRoutes = (router: Router) => {
@@ -19,6 +19,7 @@ const lecturesRoutes = (router: Router) => {
 
     asyncHandler(createLectureHandler)
   );
+
   router.patch(
     "/:lectureId",
 
@@ -30,8 +31,11 @@ const lecturesRoutes = (router: Router) => {
 
     asyncHandler(updateLectureHandler)
   );
+
   router.delete(
     "/:lectureId",
+
+    ensureLectureIdInParamsMiddleware,
 
     asyncHandler(deleteLectureHandler)
   );
