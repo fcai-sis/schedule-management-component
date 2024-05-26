@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import LectureModel from "../../data/models/lecture.model";
-import { InstructorTeachingModel } from "@fcai-sis/shared-models";
+import { InstructorTeachingModel, LectureModel } from "@fcai-sis/shared-models";
 
 
 const ensureInstructorAvailbility = async (

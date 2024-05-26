@@ -1,7 +1,6 @@
+import { LectureModel, SectionModel } from "@fcai-sis/shared-models";
 import { NextFunction, Request, Response } from "express";
 
-import LectureModel from "../../data/models/lecture.model";
-import SectionModel from "../../data/models/section.model";
 
 export const ensureHallAndSlotUniqueMiddleware = async (
   req: Request,

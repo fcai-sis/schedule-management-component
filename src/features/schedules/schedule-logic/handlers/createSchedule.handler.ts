@@ -1,5 +1,5 @@
+import { ScheduleModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import Schedule from "../../data/models/schedule.model";
 
 type HandlerRequest = Request<
   {},
@@ -17,7 +17,7 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const { description, level, departmentId, semesterId } = req.body;
 
-  const schedule = new Schedule({
+  const schedule = new ScheduleModel({
     description,
     level,
     departmentId,

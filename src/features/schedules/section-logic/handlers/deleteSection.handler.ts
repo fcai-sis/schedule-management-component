@@ -1,5 +1,5 @@
+import { SectionModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import SectionModel from "../../data/models/section.model";
 
 
 type HandlerRequest = Request<

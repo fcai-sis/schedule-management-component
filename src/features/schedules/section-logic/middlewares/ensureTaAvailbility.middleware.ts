@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import SectionModel from "../../data/models/section.model";
-import { TaTeachingModel } from "@fcai-sis/shared-models";
+import { SectionModel, TaTeachingModel } from "@fcai-sis/shared-models";
 
 
 const ensureTaAvailbility = async (

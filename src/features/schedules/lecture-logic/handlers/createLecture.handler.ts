@@ -1,5 +1,5 @@
+import { LectureModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import LectureModel from "../../data/models/lecture.model";
 
 type HandlerRequest = Request<
   {},

@@ -1,5 +1,5 @@
+import { ScheduleModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import Schedule from "../../data/models/schedule.model";
 
 type HandlerRequest = Request;
 
@@ -7,7 +7,7 @@ type HandlerRequest = Request;
  * Get all available schedules.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const schedules = await Schedule.find();
+  const schedules = await ScheduleModel.find();
 
   return res.status(200).send({
     schedules: schedules.map((schedule) => ({

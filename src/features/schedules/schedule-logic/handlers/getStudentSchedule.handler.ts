@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { TokenPayload } from "@fcai-sis/shared-middlewares";
-import { StudentModel, SemesterModel, EnrollmentModel, InstructorTeachingModel, TaTeachingModel } from "@fcai-sis/shared-models";
+import { StudentModel, SemesterModel, EnrollmentModel, InstructorTeachingModel, TaTeachingModel, LectureModel, SectionModel } from "@fcai-sis/shared-models";
 
-import LectureModel from "../../data/models/lecture.model";
-import SectionModel from "../../data/models/section.model";
 
 type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
 

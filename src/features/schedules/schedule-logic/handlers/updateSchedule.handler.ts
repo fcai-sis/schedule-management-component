@@ -1,6 +1,6 @@
+import { ScheduleModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
-import Schedule from "../../data/models/schedule.model";
 
 type HandlerRequest = Request<
   {
@@ -21,7 +21,7 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const scheduleId = req.params.scheduleId;
 
-  const schedule = await Schedule.findByIdAndUpdate(
+  const schedule = await ScheduleModel.findByIdAndUpdate(
     scheduleId,
     { ...req.body },
     { new: true }
