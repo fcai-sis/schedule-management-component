@@ -16,12 +16,22 @@ type HandlerRequest = Request<
 const handler = async (req: HandlerRequest, res: Response) => {
   const sectionId = req.params.sectionId;
 
-  const section = await SectionModel.findByIdAndDelete(sectionId);
+  const section = await SectionModel.findById(sectionId);
 
   if (!section) {
     return res.status(404).json({
       error: {
         message: "Section not found",
+      },
+    });
+  }
+
+  const deletedSection = await section.deleteOne();
+
+  if (!deletedSection) {
+    return res.status(500).json({
+      error: {
+        message: "Failed to delete section",
       },
     });
   }
