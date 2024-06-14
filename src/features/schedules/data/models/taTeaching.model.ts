@@ -1,7 +1,7 @@
 import {
   courseModelName,
   semesterModelName,
-  teacherAssistantModelName,
+  teachingAssistantName,
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
@@ -9,7 +9,7 @@ import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
 const taTeachingSchema = new mongoose.Schema({
   taId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: teacherAssistantModelName,
+    ref: teachingAssistantName,
     required: true,
   },
   courseId: {
@@ -28,7 +28,7 @@ const taTeachingSchema = new mongoose.Schema({
 taTeachingSchema.pre("save", async function(next) {
   try {
     const ta = await mongoose
-      .model(teacherAssistantModelName)
+      .model(teachingAssistantName)
       .findById(this.taId);
     if (!ta) {
       throw new ForeignKeyNotFound("TA not found");

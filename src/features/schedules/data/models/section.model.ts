@@ -1,7 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { scheduleModelName } from "./schedule.model";
 import {
-  courseModelName,
   hallModelName,
   slotModelName,
 } from "@fcai-sis/shared-models";

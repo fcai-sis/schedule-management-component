@@ -28,10 +28,7 @@ const schedulesRoutes = (router: Router) => {
   router.get(
     "/teaching",
 
-    checkRole([
-      Role.INSTUCTOR,
-      Role.TEACHING_ASSISTANT
-    ]),
+    checkRole([Role.INSTUCTOR, Role.TEACHING_ASSISTANT]),
 
     asyncHandler(getCustomTeachingScheduleHandler)
   );
@@ -39,9 +36,7 @@ const schedulesRoutes = (router: Router) => {
   router.get(
     "/student",
 
-    checkRole([
-      Role.STUDENT
-    ]),
+    checkRole([Role.STUDENT]),
 
     asyncHandler(getStudentScheduleHandler)
   );

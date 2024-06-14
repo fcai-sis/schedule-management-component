@@ -2,6 +2,7 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
 
 import {
@@ -51,6 +52,9 @@ app.use(cors());
 // Parse JSON and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Parse cookies
+app.use(cookieParser());
 
 // Mount API routes
 app.use("/schedules", schedulesRouter());

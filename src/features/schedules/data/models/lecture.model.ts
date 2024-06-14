@@ -1,7 +1,6 @@
 import mongoose, { InferSchemaType } from "mongoose";
 import { scheduleModelName } from "./schedule.model";
 import {
-  courseModelName,
   hallModelName,
   slotModelName,
 } from "@fcai-sis/shared-models";
@@ -32,7 +31,7 @@ const lectureSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to ensure referential integrity
-lectureSchema.pre("save", async function (next) {
+lectureSchema.pre("save", async function(next) {
   try {
     const schedule = await mongoose
       .model(scheduleModelName)

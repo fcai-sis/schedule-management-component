@@ -2,7 +2,6 @@ import {
   courseModelName,
   instructorModelName,
   semesterModelName,
-  teacherAssistantModelName,
 } from "@fcai-sis/shared-models";
 import mongoose, { InferSchemaType } from "mongoose";
 import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
