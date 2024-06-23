@@ -9,7 +9,7 @@ type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
  * Get the custom schedule for the user based on their role, either instructor or TA
  */
 const getCustomTeachingScheduleHandler = async (req: HandlerRequest, res: Response) => {
-  const { user: { id, role } } = req.body;
+  const { user: { id: userId, role } } = req.body;
 
   // Find the latest semseter, sort by createdAt and get the first result
   const currentSemester = await SemesterModel.findOne().sort('-createdAt');
@@ -37,7 +37,7 @@ const getCustomTeachingScheduleHandler = async (req: HandlerRequest, res: Respon
       break;
 
     case Role.TEACHING_ASSISTANT:
-      const ta = await TeachingAssistantModel.findOne({ id });
+      const ta = await TeachingAssistantModel.findOne({ userId });
 
       if (!ta) {
         res.status(404).send("TA not found");
