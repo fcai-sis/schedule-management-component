@@ -1,34 +1,32 @@
-import { LectureModel } from "@fcai-sis/shared-models";
+import { LectureModel, LectureType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    scheduleId: string;
-    hallId: string;
-    slotId: string;
-    teachingId: string;
+    lecture: LectureType;
   }
 >;
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, hallId, slotId, teachingId } = req.body;
+  const { lecture } = req.body;
 
-  const lecture = new LectureModel({
-    scheduleId,
-    hallId,
-    slotId,
-    teachingId
+  const createdLecture = new LectureModel({
+    schedule: lecture.schedule,
+    hall: lecture.hall,
+    slot: lecture.slot,
+    instructorTeaching: lecture.instructorTeaching,
+
   });
 
-  await lecture.save();
+  await createdLecture.save();
 
   const response = {
     message: "lecture created successfully",
     lecture: {
-      ...lecture.toObject(),
+      ...createdLecture.toObject(),
     },
   };
 

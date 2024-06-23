@@ -10,9 +10,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const instructorTeachingId = req.params.instructorTeachingId;
 
   const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId)
-  .populate("instructorId")
-  .populate("courseId")
-  .populate("semesterId")
+  .populate("instructor")
+  .populate("course")
+  .populate("semester")
 
   if (!instructorTeaching) {
     return res.status(404).json({

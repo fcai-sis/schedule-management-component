@@ -1,36 +1,35 @@
 import { Request, Response } from "express";
-import { SemesterModel, TaTeachingModel } from "@fcai-sis/shared-models";
+import { SemesterModel, TaTeachingModel, TaTeachingType } from "@fcai-sis/shared-models";
 
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    courseId: string;
-    taId: string;
+    taTeaching: TaTeachingType,
   }
 >;
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { taId, courseId } = req.body;
-  const semesterId = await SemesterModel.findOne().sort({ createdAt: -1 }).select("_id");
+  const { taTeaching } = req.body;
+  const semester = await SemesterModel.findOne().sort({ createdAt: -1 }).select("_id");
 
-  if (!semesterId) {
+  if (!semester) {
     return res.status(400).json({ message: "Semester not found" });
   }
 
-  const taTeaching = new TaTeachingModel({
-    taId,
-    courseId,
-    semesterId
+  const createdTaTeaching = new TaTeachingModel({
+    ta: taTeaching.ta,
+    courseId: taTeaching.course,
+    semester
   });
 
-  await taTeaching.save();
+  await createdTaTeaching.save();
   const response = {
     message: "Ta Teaching created successfully",
     taTeaching: {
-      ...taTeaching.toObject(),
+      ...createdTaTeaching.toObject(),
     },
   };
 

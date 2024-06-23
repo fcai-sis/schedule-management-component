@@ -4,22 +4,22 @@ import logger from "../../../../core/logger";
 
 const updateSectionValidatorMiddleware = [
     validator
-        .body("groupName")
+        .body("section.groupName")
         .optional()
         .isString()
         .withMessage("groupName must be a string"),
     validator
-        .body("scheduleId")
+        .body("section.schedule")
         .optional()
         .isMongoId()
         .withMessage("scheduleId must be a valid mongo id"),
     validator
-        .body("hallId")
+        .body("section.hall")
         .optional()
         .isMongoId()
         .withMessage("hallId must be a valid mongo id"),
     validator
-        .body("slotId")
+        .body("section.slot")
         .optional()
         .isMongoId()
         .withMessage("slotId must be a valid mongo id"),

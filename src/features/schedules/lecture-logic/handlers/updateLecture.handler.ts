@@ -1,4 +1,4 @@
-import { LectureModel } from "@fcai-sis/shared-models";
+import { LectureModel, LectureType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 
@@ -8,10 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    scheduleId?: string;
-    hallId?: string;
-    slotId?: string;
-    teachingId?: string;
+    lecture: Partial<LectureType>;
   }
 >;
 
@@ -20,21 +17,20 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const lectureId = req.params.lectureId;
+  const { lecture } = req.body;
 
-  const { scheduleId, hallId, slotId, teachingId } = req.body;
-
-  const lecture = await LectureModel.findByIdAndUpdate(
+  const updatedLecture = await LectureModel.findByIdAndUpdate(
     lectureId,
     {
-      ...(scheduleId && { scheduleId }),
-      ...(hallId && { hallId }),
-      ...(slotId && { slotId }),
-      ...(teachingId && { teachingId }),
+      ...(lecture.schedule && { schedule: lecture.schedule }),
+      ...(lecture.hall && { hall: lecture.hall }),
+      ...(lecture.slot && { slot: lecture.slot }),
+      ...(lecture.instructorTeaching && { instructorTeaching: lecture.instructorTeaching }),
     },
     { new: true }
   );
 
-  if (!lecture) {
+  if (!updatedLecture) {
     return res.status(404).json({
       error: {
         message: "Lecture not found",
@@ -45,7 +41,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Lecture updated successfully",
     lecture: {
-      ...lecture.toObject(),
+      ...updatedLecture.toObject(),
     },
   };
 

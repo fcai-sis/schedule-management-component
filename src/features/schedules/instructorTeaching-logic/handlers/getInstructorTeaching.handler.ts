@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 
 type HandlerRequest = Request<
   {
-    instructorId?: string;
-    courseId?: string;
-    semesterId?: string;
+    instructor?: string;
+    course?: string;
+    semester?: string;
   },
   {},
   {}
@@ -14,18 +14,18 @@ type HandlerRequest = Request<
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { instructorId, courseId, semesterId } = req.query;
+  const { instructor, course, semester } = req.query;
 
   const query = {
-    ...(instructorId && { instructorId }),
-    ...(courseId && { courseId }),
-    ...(semesterId && { semesterId }),
+    ...(instructor && { instructor }),
+    ...(course && { course }),
+    ...(semester && { semester }),
   };
 
   const instructorTeaching = await InstructorTeachingModel.find(query)
-  .populate("instructorId")
-    .populate("courseId")
-    .populate("semesterId");
+  .populate("instructor")
+    .populate("course")
+    .populate("semester");
 
 
   const response = {

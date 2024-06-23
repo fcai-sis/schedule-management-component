@@ -2,10 +2,6 @@ import { Request, Response } from "express";
 import { TokenPayload } from "@fcai-sis/shared-middlewares";
 import { StudentModel, SemesterModel, EnrollmentModel, InstructorTeachingModel, TaTeachingModel, LectureModel, SectionModel } from "@fcai-sis/shared-models";
 
-import LectureModel from "../../data/models/lecture.model";
-import SectionModel from "../../data/models/section.model";
-import TaTeachingModel from "../../data/models/taTeaching.model";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
 import logger from "../../../../core/logger";
 
 type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
@@ -16,7 +12,7 @@ type HandlerRequest = Request<{}, {}, { user: TokenPayload; }>
 const getStudentScheduleHandler = async (req: HandlerRequest, res: Response) => {
   logger.info(`getStudentScheduleHandler ${JSON.stringify(req.body)} ${JSON.stringify(req.headers)}`);
 
-  const { user: { id: userId } } = req.body;
+  const { user: { userId } } = req.body;
 
   // Find the latest semseter, sort by createdAt and get the first result
   const currentSemester = await SemesterModel.findOne().sort('-createdAt');
@@ -29,7 +25,7 @@ const getStudentScheduleHandler = async (req: HandlerRequest, res: Response) => 
   const semesterId = currentSemester!._id.toString();
 
   // Find the student
-  const student = await StudentModel.findOne({ id });
+  const student = await StudentModel.findOne({ userId });
 
   if (!student) {
     res.status(404).json({ error: "Student not found" });

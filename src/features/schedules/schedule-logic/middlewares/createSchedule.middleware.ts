@@ -19,13 +19,13 @@ const validateCreateScheduleRequestMiddleware = [
     .isNumeric()
     .withMessage("Level must be a number"),
 
-  validator.body("departmentId")
+  validator.body("department")
     .exists()
     .withMessage("Department ID is required")
     .isMongoId()
     .withMessage("Department ID must be valid"),
 
-  validator.body("semesterId")
+  validator.body("semester")
     .exists()
     .withMessage("Semester ID is required")
     .isMongoId()
@@ -56,8 +56,8 @@ const validateCreateScheduleRequestMiddleware = [
     // Attach the validated data to the request body
     req.body.description = req.body.description.trim();
     req.body.level = parseInt(req.body.level, 10);
-    req.body.departmentId = req.body.departmentId.trim();
-    req.body.semesterId = req.body.semesterId.trim();
+    req.body.department = req.body.department.trim();
+    req.body.semester = req.body.semester.trim();
 
     next();
   },

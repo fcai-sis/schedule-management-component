@@ -9,7 +9,9 @@ type HandlerRequest = Request<{ scheduleId: string }, {}, {}>;
 const handler = async (req: HandlerRequest, res: Response) => {
   const scheduleId = req.params.scheduleId;
 
-  const schedule = await ScheduleModel.findById(scheduleId);
+  const schedule = await ScheduleModel.findById(scheduleId)
+    .populate("department")
+    .populate("semester");
 
   if (!schedule) {
     return res.status(404).json({

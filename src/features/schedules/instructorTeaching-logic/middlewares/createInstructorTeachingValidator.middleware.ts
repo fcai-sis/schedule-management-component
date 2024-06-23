@@ -4,12 +4,12 @@ import logger from "../../../../core/logger";
 
 const createInstructorTeachingValidatorMiddleware = [
   validator
-    .body("instructorId")
+    .body("instructorTeaching.instructor")
     .exists()
     .isMongoId()
     .withMessage("Teacher assistant Id must be a valid mongo id"),
   validator
-    .body("courseId")
+    .body("instructorTeaching.course")
     .exists()
     .isMongoId()
     .withMessage("courseId must be a valid mongo id"),

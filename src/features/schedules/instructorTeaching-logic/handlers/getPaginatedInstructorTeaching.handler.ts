@@ -3,32 +3,40 @@ import { Request, Response } from "express";
 
 
 type HandlerRequest = Request<
-    {
-        instructorId?: string;
-        courseId?: string;
-        semesterId?: string;
-    },
     {},
-    {}
+    {},
+    {},
+    {
+        instructor?: string;
+        course?: string;
+        semester?: string;
+        skip?: number,
+        limit?: number
+    }
 >;
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-    const { instructorId, courseId, semesterId } = req.query;
+    const { instructor, course, semester, skip, limit } = req.query;
     const page = req.context.page;
     const pageSize = req.context.pageSize;
 
     const query = {
-        ...(instructorId && { instructorId }),
-        ...(courseId && { courseId }),
-        ...(semesterId && { semesterId }),
+        ...(instructor && { instructor }),
+        ...(course && { course }),
+        ...(semester && { semester }),
     };
-    const instructorTeaching = await InstructorTeachingModel.find(query)
-        .populate("instructorId")
-        .populate("courseId")
-        .populate("semesterId")
-        .skip((page - 1) * pageSize)
-        .limit(pageSize);
+    const instructorTeaching = await InstructorTeachingModel.find(
+        query,
+        {
+            _v: 0
+
+        },
+        {
+            skip: skip ?? 0,
+            limit: limit as unknown as number,
+        }
+    );
 
     const count = await InstructorTeachingModel.countDocuments(query);
     const totalPages = Math.ceil(count / pageSize);

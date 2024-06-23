@@ -4,27 +4,27 @@ import logger from "../../../../core/logger";
 
 const createSectionValdiatorMiddleware = [
   validator
-    .body("groupName")
+    .body("section.groupName")
     .exists()
     .isString()
     .withMessage("groupName must be a string"),
     validator
-    .body("scheduleId")
+    .body("section.schedule")
     .exists()
     .isMongoId()
     .withMessage("scheduleId must be a valid mongo id"),
     validator
-    .body("hallId")
+    .body("section.hall")
     .exists()
     .isMongoId()
     .withMessage("hallId must be a valid mongo id"),
     validator
-    .body("slotId")
+    .body("section.slot")
     .exists()
     .isMongoId()
     .withMessage("slotId must be a valid mongo id"),
     validator
-    .body("teachingId")
+    .body("section.taTeaching")
     .exists()
     .isMongoId()
     .withMessage("TaTeachingId must be a valid mongo id"),

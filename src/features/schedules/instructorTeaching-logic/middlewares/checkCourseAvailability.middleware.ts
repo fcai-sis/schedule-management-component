@@ -6,10 +6,10 @@ const checkCourseAvailabilityMiddleware = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { courseId } = req.query;
+    const { course } = req.query;
     const semester = await SemesterModel.findOne({}).sort({ createdAt: -1 });
 
-    if (!courseId) {
+    if (!course) {
         // If courseId is not provided in the request query, skip the check
         return next();
     }
@@ -18,7 +18,7 @@ const checkCourseAvailabilityMiddleware = async (
         return res.status(404).json({ message: "Semester not found" });
     }
 
-    const courseExists = semester.courseIds.includes(courseId);
+    const courseExists = semester.courseIds.includes(course);
 
     if (!courseExists) {
         return res.status(404).json({ message: "Course not available in this semester" });

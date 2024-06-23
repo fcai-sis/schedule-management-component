@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 
 type HandlerRequest = Request<
   {
-    taId?: string;
-    courseId?: string;
-    semesterId?: string;
+    ta?: string;
+    course?: string;
+    semester?: string;
   },
   {},
   {}
@@ -14,18 +14,18 @@ type HandlerRequest = Request<
 
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { taId, courseId, semesterId } = req.query;
+  const { ta, course, semester } = req.query;
 
   const query = {
-    ...(taId && { taId }),
-    ...(courseId && { courseId }),
-    ...(semesterId && { semesterId }),
+    ...(ta && { ta }),
+    ...(course && { course }),
+    ...(semester && { semester }),
   };
 
   const taTeaching = await TaTeachingModel.find(query)
-  .populate("taId")
-    .populate("courseId")
-    .populate("semesterId");
+  .populate("ta")
+    .populate("course")
+    .populate("semester");
 
 
   const response = {

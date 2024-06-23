@@ -1,4 +1,4 @@
-import { InstructorTeachingModel } from "@fcai-sis/shared-models";
+import { InstructorTeachingModel, InstructorTeachingType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 
@@ -8,9 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    instructorId?: string;
-    courseId?: string;
-    semesterId?: string;
+    instructorTeaching: Partial<InstructorTeachingType>;
   }
 >;
 
@@ -19,14 +17,19 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const instructorTeachingId = req.params.instructorTeachingId;
+  const { instructorTeaching } = req.body;
 
-  const instructorTeaching = await InstructorTeachingModel.findByIdAndUpdate(
+  const createdInstructorTeaching = await InstructorTeachingModel.findByIdAndUpdate(
     instructorTeachingId,
-    { ...req.body },
+    {
+      ...(instructorTeaching.instructor && { instructor: instructorTeaching.instructor }),
+      ...(instructorTeaching.course && { course: instructorTeaching.course }),
+      ...(instructorTeaching.semester && { semester: instructorTeaching.semester }),
+    },
     { new: true }
   );
 
-  if (!instructorTeaching) {
+  if (!createdInstructorTeaching) {
     return res.status(404).json({
       error: {
         message: "Instructor teaching not found",
@@ -37,7 +40,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Instructor Teaching updated successfully",
     instructorTeaching: {
-      ...instructorTeaching.toObject(),
+      ...createdInstructorTeaching.toObject(),
     },
   };
 

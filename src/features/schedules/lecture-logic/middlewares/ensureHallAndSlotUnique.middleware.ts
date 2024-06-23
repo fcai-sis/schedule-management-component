@@ -7,13 +7,13 @@ export const ensureHallAndSlotUniqueMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { hallId, slotId } = req.body;
-  const existingLecture = await LectureModel.findOne({ hallId, slotId });
+  const { hall, slot } = req.body;
+  const existingLecture = await LectureModel.findOne({ hall, slot });
   if (existingLecture) {
     return res.status(400).json({ message: "Hall and slot already assigned to a lecture" });
   }
 
-  const existingSection = await SectionModel.findOne({ hallId, slotId });
+  const existingSection = await SectionModel.findOne({ hall, slot });
   if (existingSection) {
     return res.status(400).json({ message: "Hall and slot already assigned to a section" });
   }

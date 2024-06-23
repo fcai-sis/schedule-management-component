@@ -1,4 +1,4 @@
-import { ScheduleModel } from "@fcai-sis/shared-models";
+import { ScheduleModel, ScheduleType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 
@@ -8,10 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    description?: string;
-    level?: number;
-    departmentId?: string;
-    semesterId?: string;
+    schedule: Partial<ScheduleType>;
   }
 >;
 
@@ -20,14 +17,20 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const scheduleId = req.params.scheduleId;
+  const { schedule } = req.body;
 
-  const schedule = await ScheduleModel.findByIdAndUpdate(
+  const updatedSchedule = await ScheduleModel.findByIdAndUpdate(
     scheduleId,
-    { ...req.body },
+    {
+      ...(schedule.description && { description: schedule.description }),
+      ...(schedule.level && { level: schedule.level }),
+      ...(schedule.department && { department: schedule.department }),
+      ...(schedule.semester && { semester: schedule.semester }),
+    },
     { new: true }
   );
 
-  if (!schedule) {
+  if (!updatedSchedule) {
     return res.status(404).json({
       error: {
         message: "Schedule not found",
@@ -38,7 +41,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Schedule updated successfully",
     schedule: {
-      ...schedule.toObject(),
+      ...updatedSchedule.toObject(),
     },
   };
 

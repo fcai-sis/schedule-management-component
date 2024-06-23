@@ -1,34 +1,33 @@
-import { SectionModel } from "@fcai-sis/shared-models";
+import { SectionModel, SectionType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    scheduleId: string;
-    hallId: string;
-    slotId: string;
-    teachingId: string;
+    section: SectionType;
   }
 >;
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { scheduleId, hallId, slotId, teachingId } = req.body;
+  const { section } = req.body;
 
 
-  const section = new SectionModel({
-    scheduleId,
-    hallId,
-    slotId,
-    teachingId
+  const createdSection = new SectionModel({
+    groupName: section.groupName,
+    schedule: section.schedule,
+    hall: section.hall,
+    slot: section.slot,
+    taTeaching: section.taTeaching,
+
   });
 
-  await section.save();
+  await createdSection.save();
 
   const response = {
     message: "Section created successfully",
     section: {
-      ...section.toObject(),
+      ...createdSection.toObject(),
     },
   };
 

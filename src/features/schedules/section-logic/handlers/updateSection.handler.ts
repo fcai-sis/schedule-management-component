@@ -1,4 +1,4 @@
-import { SectionModel } from "@fcai-sis/shared-models";
+import { SectionModel, SectionType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 
@@ -8,10 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    scheduleId?: string;
-    hallId?: string;
-    slotId?: string;
-    teachingId?: string;
+    section: Partial<SectionType>;
   }
 >;
 
@@ -20,21 +17,21 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const sectionId = req.params.sectionId;
+  const { section } = req.body;
 
-  const { scheduleId, hallId, slotId, teachingId } = req.body;
-
-  const section = await SectionModel.findByIdAndUpdate(
+  const updatedSection = await SectionModel.findByIdAndUpdate(
     sectionId,
     {
-      ...(scheduleId && { scheduleId }),
-      ...(hallId && { hallId }),
-      ...(slotId && { slotId }),
-      ...(teachingId && { teachingId }),
+      ...(section.groupName && { groupName: section.groupName }),
+      ...(section.schedule && { schedule: section.schedule }),
+      ...(section.hall && { hall: section.hall }),
+      ...(section.slot && { slot: section.slot }),
+      ...(section.taTeaching && { taTeaching: section.taTeaching }),
     },
     { new: true }
   );
 
-  if (!section) {
+  if (!updatedSection) {
     return res.status(404).json({
       error: {
         message: "Section not found",
@@ -45,7 +42,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Section updated successfully",
     section: {
-      ...section.toObject(),
+      ...updatedSection.toObject(),
     },
   };
 

@@ -7,19 +7,19 @@ const ensureInstructorAvailbility = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { teachingId, slotId } = req.body;
-  const instructorTeaching = await InstructorTeachingModel.findById(teachingId);
+  const { instructorTeaching, slot } = req.body;
+  const instructorTeachingModel = await InstructorTeachingModel.findById(instructorTeaching);
 
-  if (!instructorTeaching) {
+  if (!instructorTeachingModel) {
     return res.status(400).json({ message: "Instructor teaching id not found" });
   }
 
-  const semesterId = instructorTeaching.semesterId;
-  const instructorId = instructorTeaching.instructorId;
-  const teachingIds = await InstructorTeachingModel.find({ instructorId, semesterId });
-  const lectures = await LectureModel.find({ teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) } });
+  const semester = instructorTeachingModel.semester;
+  const instructor = instructorTeachingModel.instructor;
+  const teachingIds = await InstructorTeachingModel.find({ instructor, semester });
+  const lectures = await LectureModel.find({ instructorTeaching: { $in: teachingIds.map((instructorTeaching) => instructorTeaching._id) } });
   for (const lecture of lectures) {
-    if (lecture.slotId.toString() === slotId) {
+    if (lecture.slot.toString() === slot) {
       return res.status(400).json({ message: "Instructor is busy at this time" });
     }
   }

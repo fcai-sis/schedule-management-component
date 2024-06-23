@@ -1,4 +1,4 @@
-import { TaTeachingModel } from "@fcai-sis/shared-models";
+import { TaTeachingModel, TaTeachingType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 
@@ -8,9 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    taId?: string;
-    courseId?: string;
-    semesterId?: string;
+    taTeaching: Partial<TaTeachingType>;
   }
 >;
 
@@ -19,14 +17,19 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const taTeachingId = req.params.taTeachingId;
+  const { taTeaching } = req.body;
 
-  const taTeaching = await TaTeachingModel.findByIdAndUpdate(
+  const updatedTaTeaching = await TaTeachingModel.findByIdAndUpdate(
     taTeachingId,
-    { ...req.body },
+    {
+      ...(taTeaching.ta && { ta: taTeaching.ta }),
+      ...(taTeaching.course && { course: taTeaching.course }),
+      ...(taTeaching.semester && { semester: taTeaching.semester }),
+    },
     { new: true }
   );
 
-  if (!taTeaching) {
+  if (!updatedTaTeaching) {
     return res.status(404).json({
       error: {
         message: "Ta teaching not found",
@@ -37,7 +40,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Ta Teaching updated successfully",
     taTeaching: {
-      ...taTeaching.toObject(),
+      ...updatedTaTeaching.toObject(),
     },
   };
 
