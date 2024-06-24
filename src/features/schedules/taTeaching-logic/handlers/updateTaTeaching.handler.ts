@@ -1,7 +1,6 @@
 import { TaTeachingModel, TaTeachingType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
-
 type HandlerRequest = Request<
   {
     taTeachingId: string;
@@ -26,7 +25,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       ...(taTeaching.course && { course: taTeaching.course }),
       ...(taTeaching.semester && { semester: taTeaching.semester }),
     },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!updatedTaTeaching) {
