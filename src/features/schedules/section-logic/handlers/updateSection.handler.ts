@@ -1,7 +1,6 @@
 import { SectionModel, SectionType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
-
 type HandlerRequest = Request<
   {
     sectionId: string;
@@ -28,7 +27,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       ...(section.slot && { slot: section.slot }),
       ...(section.taTeaching && { taTeaching: section.taTeaching }),
     },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!updatedSection) {

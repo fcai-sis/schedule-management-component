@@ -1,6 +1,5 @@
 import * as validator from "express-validator";
-import { Request, Response, NextFunction } from "express";
-import logger from "../../../../core/logger";
+import { validateRequestMiddleware } from "@fcai-sis/shared-middlewares";
 
 const createSectionValdiatorMiddleware = [
   validator
@@ -8,34 +7,27 @@ const createSectionValdiatorMiddleware = [
     .exists()
     .isString()
     .withMessage("groupName must be a string"),
-    validator
+  validator
     .body("section.schedule")
     .exists()
     .isMongoId()
     .withMessage("scheduleId must be a valid mongo id"),
-    validator
+  validator
     .body("section.hall")
     .exists()
     .isMongoId()
     .withMessage("hallId must be a valid mongo id"),
-    validator
+  validator
     .body("section.slot")
     .exists()
     .isMongoId()
     .withMessage("slotId must be a valid mongo id"),
-    validator
+  validator
     .body("section.taTeaching")
     .exists()
     .isMongoId()
     .withMessage("TaTeachingId must be a valid mongo id"),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validator.validationResult(req);
-        if (!errors.isEmpty()) {
-            logger.error("Validation error", errors.array());
-            return res.status(400).json({ errors: errors.array() });
-        }
-        next();
-        },
+  validateRequestMiddleware,
 ];
 
 export default createSectionValdiatorMiddleware;

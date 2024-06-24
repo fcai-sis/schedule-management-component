@@ -1,7 +1,6 @@
 import { LectureModel, LectureType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
-
 type HandlerRequest = Request<
   {
     lectureId: string;
@@ -25,9 +24,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
       ...(lecture.schedule && { schedule: lecture.schedule }),
       ...(lecture.hall && { hall: lecture.hall }),
       ...(lecture.slot && { slot: lecture.slot }),
-      ...(lecture.instructorTeaching && { instructorTeaching: lecture.instructorTeaching }),
+      ...(lecture.instructorTeaching && {
+        instructorTeaching: lecture.instructorTeaching,
+      }),
     },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!updatedLecture) {
