@@ -11,7 +11,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   try {
     // Find the Instructor teaching
-    const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId);
+    const instructorTeaching = await InstructorTeachingModel.findById(
+      instructorTeachingId
+    );
 
     // If Instructor teaching not found, return 404
     if (!instructorTeaching) {
@@ -22,7 +24,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       });
     }
 
-    await LectureModel.deleteMany({ teachingId: instructorTeachingId });
+    await LectureModel.deleteMany({ instructorTeaching: instructorTeachingId });
 
     // Delete the Instructor teaching
     await instructorTeaching.deleteOne();
