@@ -21,7 +21,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     }
 
     // Delete related lectures
-    await SectionModel.deleteMany({ teachingId: taTeachingId });
+    await SectionModel.deleteMany({ taTeaching: taTeachingId });
 
     // Delete the Ta teaching
     await taTeaching.delete();
