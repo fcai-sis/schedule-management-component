@@ -72,10 +72,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.stack);
   // check the type of error and return the appropriate response
-  if (err instanceof ForeignKeyNotFound) {
+  if (err instanceof mongoose.Error.ValidationError) {
     return res.status(400).json({
-      message: err.message,
-      code: err.code,
+      errors: Object.keys(err.errors).reduce((acc, key) => {
+        acc[key] = err.errors[key].message;
+        return acc;
+      }, {} as any),
     });
   }
   res.status(500).json({ message: "Something broke on our end" });
