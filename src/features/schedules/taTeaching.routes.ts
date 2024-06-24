@@ -7,10 +7,10 @@ import getPaginatedTaTeachingHandler from "./taTeaching-logic/handlers/getPagina
 import getTaTeachingHandler from "./taTeaching-logic/handlers/getTaTeaching.handler";
 import getTaTeachingByIdHandler from "./taTeaching-logic/handlers/getTaTeachingById.handler";
 import deleteTaTeachingHandler from "./taTeaching-logic/handlers/deleteTaTeaching.handler";
-import checkCourseAvailabilityMiddleware from "./taTeaching-logic/middlewares/checkCourseAvailability.middleware";
 import updateTaTeachingHandler from "./taTeaching-logic/handlers/updateTaTeaching.handler";
 import ensureTaTeachingIdInParamsMiddleware from "./taTeaching-logic/middlewares/ensureTaTeachingIdInParams.middleware";
-
+import paginate from "express-paginate";
+import checkCourseAvailabilityMiddleware from "./instructorTeaching-logic/middlewares/checkCourseAvailability.middleware";
 
 const taTeachingRoutes = (router: Router) => {
   router.post(
@@ -32,7 +32,7 @@ const taTeachingRoutes = (router: Router) => {
   router.get(
     "/read",
 
-
+    paginate.middleware(),
     asyncHandler(getPaginatedTaTeachingHandler)
   );
 
