@@ -10,7 +10,7 @@ import deleteInstructorTeachingHandler from "./instructorTeaching-logic/handlers
 import ensureInstructorTeachingIdInParamsMiddleware from "./instructorTeaching-logic/middlewares/ensureInstructorTeachingIdInParams.middleware";
 import checkCourseAvailabilityMiddleware from "./instructorTeaching-logic/middlewares/checkCourseAvailability.middleware";
 import updateInstructorTeachingHandler from "./instructorTeaching-logic/handlers/updateInstructorTeaching.handler";
-
+import paginate from "express-paginate";
 
 const intstuctorTeachingRoutes = (router: Router) => {
   router.post(
@@ -32,7 +32,7 @@ const intstuctorTeachingRoutes = (router: Router) => {
   router.get(
     "/read",
 
-
+    paginate.middleware(),
     asyncHandler(getPaginatedInstructorTeachingHandler)
   );
 
