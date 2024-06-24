@@ -1,6 +1,8 @@
-import { InstructorTeachingModel, InstructorTeachingType } from "@fcai-sis/shared-models";
+import {
+  InstructorTeachingModel,
+  InstructorTeachingType,
+} from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-
 
 type HandlerRequest = Request<
   {
@@ -19,15 +21,20 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const instructorTeachingId = req.params.instructorTeachingId;
   const { instructorTeaching } = req.body;
 
-  const createdInstructorTeaching = await InstructorTeachingModel.findByIdAndUpdate(
-    instructorTeachingId,
-    {
-      ...(instructorTeaching.instructor && { instructor: instructorTeaching.instructor }),
-      ...(instructorTeaching.course && { course: instructorTeaching.course }),
-      ...(instructorTeaching.semester && { semester: instructorTeaching.semester }),
-    },
-    { new: true }
-  );
+  const createdInstructorTeaching =
+    await InstructorTeachingModel.findByIdAndUpdate(
+      instructorTeachingId,
+      {
+        ...(instructorTeaching.instructor && {
+          instructor: instructorTeaching.instructor,
+        }),
+        ...(instructorTeaching.course && { course: instructorTeaching.course }),
+        ...(instructorTeaching.semester && {
+          semester: instructorTeaching.semester,
+        }),
+      },
+      { new: true, runValidators: true }
+    );
 
   if (!createdInstructorTeaching) {
     return res.status(404).json({
