@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
+import {
+  CourseType,
+  SemesterModel,
+  SemesterType,
+  SemesterCourseModel,
+  ICourse,
+} from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    year: number;
-    semesterType: string;
-    courseIds: string[];
+    semester: SemesterType;
+    courses: ICourse[];
   }
 >;
 
@@ -15,19 +20,28 @@ type HandlerRequest = Request<
  * Create a semester object to store this semester's open courses.
  */
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { year, semesterType, courseIds } = req.body;
+  const { semester, courses } = req.body;
 
-  const semester = new SemesterModel({
-    year,
-    semesterType,
-    courseIds,
+  const createdSemester = new SemesterModel({
+    year: semester.year,
+    month: semester.month,
+    season: semester.season,
   });
 
-  await semester.save();
+  await createdSemester.save();
+
+  // for each course, create a SemesterCourse object
+  await SemesterCourseModel.insertMany(
+    courses.map((course) => ({
+      semester: createdSemester._id,
+      course: course._id,
+    }))
+  );
+
   const response = {
     message: "Semester created successfully",
     semester: {
-      ...semester.toObject(),
+      ...createdSemester.toObject(),
     },
   };
 

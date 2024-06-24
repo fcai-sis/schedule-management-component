@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { validateRequestMiddleware } from "@fcai-sis/shared-middlewares";
 import * as validator from "express-validator";
 
 const middlewares = [
@@ -11,21 +11,7 @@ const middlewares = [
     .isMongoId()
     .withMessage("Semester ID must be a valid Mongo ID"),
 
-  (req: Request, res: Response, next: NextFunction) => {
-    const errors = validator.validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        error: {
-          message: errors.array()[0].msg,
-        },
-      });
-    }
-
-    req.params.semesterId = req.params.semesterId.trim();
-
-    next();
-  },
+  validateRequestMiddleware,
 ];
 
 const ensureSemesterIdInParamsMiddleware = middlewares;

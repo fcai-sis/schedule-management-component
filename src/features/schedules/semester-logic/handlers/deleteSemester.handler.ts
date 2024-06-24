@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
+import { SemesterCourseModel, SemesterModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{ semesterId: string }, {}, {}>;
 
@@ -18,6 +18,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
       },
     });
   }
+
+  // Delete SemesterCourses related to the semester
+  await SemesterCourseModel.deleteMany({ semester: semesterId });
 
   const response = {
     message: "Semester deleted successfully",

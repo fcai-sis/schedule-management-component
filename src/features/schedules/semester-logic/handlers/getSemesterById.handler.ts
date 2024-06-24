@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { SemesterModel } from "@fcai-sis/shared-models";
 
-
 type HandlerRequest = Request<{ semesterId: string }, {}, {}>;
 
 /**

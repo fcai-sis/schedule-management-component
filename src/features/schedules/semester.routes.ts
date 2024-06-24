@@ -8,6 +8,7 @@ import updateSemesterHandler from "./semester-logic/handlers/updateSemester.hand
 import ensureSemesterIdInParamsMiddleware from "./semester-logic/middlewares/ensureSemesterIdInParams.middleware";
 import deleteSemesterHandler from "./semester-logic/handlers/deleteSemester.handler";
 import getSemesterByIdHandler from "./semester-logic/handlers/getSemesterById.handler";
+import paginate from "express-paginate";
 
 const semestersRoutes = (router: Router) => {
   router.post(
@@ -19,6 +20,7 @@ const semestersRoutes = (router: Router) => {
   router.get(
     "/",
 
+    paginate.middleware(),
     asyncHandler(getSemesterHandler)
   );
 

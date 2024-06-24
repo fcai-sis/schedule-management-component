@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
+import {
+  ICourse,
+  SemesterCourseModel,
+  SemesterModel,
+  SemesterType,
+} from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {
@@ -7,8 +12,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    year?: number;
-    semesterType?: string;
+    semester: Partial<SemesterType>;
     courses?: string[];
   }
 >;
@@ -18,14 +22,19 @@ type HandlerRequest = Request<
  */
 const handler = async (req: HandlerRequest, res: Response) => {
   const semesterId = req.params.semesterId;
+  const { semester, courses } = req.body;
 
-  const semester = await SemesterModel.findByIdAndUpdate(
+  const updatedSemester = await SemesterModel.findByIdAndUpdate(
     semesterId,
-    { ...req.body },
-    { new: true }
+    {
+      ...(semester.year && { year: semester.year }),
+      ...(semester.month && { month: semester.month }),
+      ...(semester.season && { season: semester.season }),
+    },
+    { new: true, runValidators: true }
   );
 
-  if (!semester) {
+  if (!updatedSemester) {
     return res.status(404).json({
       error: {
         message: "Semester not found",
@@ -33,10 +42,23 @@ const handler = async (req: HandlerRequest, res: Response) => {
     });
   }
 
+  if (courses && courses.length > 0) {
+    // Delete all SemesterCourses related to the semester
+    await SemesterCourseModel.deleteMany({ semester: semesterId });
+
+    // Create new SemesterCourses
+    await SemesterCourseModel.insertMany(
+      courses.map((course) => ({
+        semester: updatedSemester._id,
+        course,
+      }))
+    );
+  }
+
   const response = {
     message: "Semester updated successfully",
     semester: {
-      ...semester.toObject(),
+      ...updatedSemester.toObject(),
     },
   };
 
