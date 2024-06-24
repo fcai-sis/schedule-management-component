@@ -1,7 +1,6 @@
 import { ScheduleModel, ScheduleType } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
-
 type HandlerRequest = Request<
   {
     scheduleId: string;
@@ -27,7 +26,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       ...(schedule.department && { department: schedule.department }),
       ...(schedule.semester && { semester: schedule.semester }),
     },
-    { new: true }
+    { new: true, runValidators: true }
   );
 
   if (!updatedSchedule) {
