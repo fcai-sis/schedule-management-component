@@ -1,5 +1,5 @@
+import { TaTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import TaTeachingModel from "../../data/models/taTeaching.model";
 
 type HandlerRequest = Request<{ taTeachingId: string }, {}, {}>;
 
@@ -10,9 +10,9 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const taTeachingId = req.params.taTeachingId;
 
   const taTeaching = await TaTeachingModel.findById(taTeachingId)
-  .populate("taId")
-  .populate("courseId")
-  .populate("semesterId")
+    .populate("taId")
+    .populate("courseId")
+    .populate("semesterId");
 
   if (!taTeaching) {
     return res.status(404).json({
@@ -29,7 +29,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   };
 
   return res.status(200).json(response);
-}
+};
 
 const getTaTeachingByIdHandler = handler;
 export default getTaTeachingByIdHandler;

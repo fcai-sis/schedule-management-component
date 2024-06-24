@@ -1,8 +1,5 @@
+import { SectionModel, TaTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response, NextFunction } from "express";
-import SectionModel from "../../data/models/section.model";
-import TaTeachingModel from "../../data/models/taTeaching.model";
-import sectionTeachingsModel from "../../data/models/sectionTeachings.model";
-
 
 const ensureTaAvailbility = async (
   req: Request,
@@ -23,13 +20,15 @@ const ensureTaAvailbility = async (
   const semesterId = teachingId.semesterId;
   const taId = teachingId.taId;
   const teachingIds = await TaTeachingModel.find({ taId, semesterId });
-  const sections = await SectionModel.find({ teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) } });
+  const sections = await SectionModel.find({
+    teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) },
+  });
   for (const section of sections) {
     if (section.slotId.toString() === slotId) {
       return res.status(400).json({ message: "Ta is busy at this time" });
     }
   }
   next();
-}
+};
 
 export default ensureTaAvailbility;

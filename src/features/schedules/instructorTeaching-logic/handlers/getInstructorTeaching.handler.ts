@@ -1,6 +1,5 @@
+import { InstructorTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
-
 
 type HandlerRequest = Request<
   {
@@ -12,7 +11,6 @@ type HandlerRequest = Request<
   {}
 >;
 
-
 const handler = async (req: HandlerRequest, res: Response) => {
   const { instructorId, courseId, semesterId } = req.query;
 
@@ -23,13 +21,14 @@ const handler = async (req: HandlerRequest, res: Response) => {
   };
 
   const instructorTeaching = await InstructorTeachingModel.find(query)
-  .populate("instructorId")
+    .populate("instructorId")
     .populate("courseId")
     .populate("semesterId");
 
-
   const response = {
-    instructorTeaching: instructorTeaching.map((instructorTeaching) => instructorTeaching.toObject()),
+    instructorTeaching: instructorTeaching.map((instructorTeaching) =>
+      instructorTeaching.toObject()
+    ),
   };
 
   return res.status(200).json(response);

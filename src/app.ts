@@ -5,16 +5,10 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
 
-import {
-  TaTeachingRouter,
-  lecturesRouter,
-  schedulesRouter,
-  sectionsRouter,
-  semestersRouter,
-} from "./router";
+import { scheduleRouter, semestersRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
-import { ForeignKeyNotFound } from "@fcai-sis/shared-utilities";
+import mongoose from "mongoose";
 
 // Create Express server
 const app = express();
@@ -57,11 +51,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Mount API routes
-app.use("/schedules", schedulesRouter());
-app.use("/semesters", semestersRouter());
-app.use("/lectures", lecturesRouter());
-app.use("/sections", sectionsRouter());
-app.use("/taTeaching", TaTeachingRouter());
+app.use("/schedule", scheduleRouter());
+app.use("/semester", semestersRouter());
+// app.use("/lectures", lecturesRouter());
+// app.use("/sections", sectionsRouter());
+// app.use("/taTeaching", TaTeachingRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {

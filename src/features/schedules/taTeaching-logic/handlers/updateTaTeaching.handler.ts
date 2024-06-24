@@ -1,6 +1,5 @@
+import { TaTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import TaTeachingModel from "../../data/models/taTeaching.model";
-
 
 type HandlerRequest = Request<
   {

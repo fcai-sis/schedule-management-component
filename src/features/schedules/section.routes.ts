@@ -2,40 +2,39 @@ import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import ensureHallAndSlotUniqueMiddleware from "./section-logic/middlewares/ensureHallAndSlotUnique.middleware";
-import createSectionHandler from "./section-logic/handlers/createSection.handler";
-import deleteSectionHandler from "./section-logic/handlers/deleteSection.handler";
+import createSectionHandler from "../schedule/handlers/createSection.handler";
+import deleteSectionHandler from "../schedule/handlers/deleteSection.handler";
 import ensureTaAvailbility from "./section-logic/middlewares/ensureTaAvailbility.middleware";
-import updateSectionHandler from "./section-logic/handlers/updateSection.handler";
+import updateSectionHandler from "../schedule/handlers/updateSection.handler";
 import ensureSectionIdInParamsMiddleware from "./section-logic/middlewares/ensureSectionIdInParams.middleware";
 
-
 const sectionsRoutes = (router: Router) => {
-    router.post(
-        "/",
+  router.post(
+    "/",
 
-        ensureHallAndSlotUniqueMiddleware,
+    ensureHallAndSlotUniqueMiddleware,
 
-        ensureTaAvailbility,
+    ensureTaAvailbility,
 
-        asyncHandler(createSectionHandler)
-    );
+    asyncHandler(createSectionHandler)
+  );
 
-    router.patch(
-        "/:sectionId",
+  router.patch(
+    "/:sectionId",
 
-        ensureHallAndSlotUniqueMiddleware,
+    ensureHallAndSlotUniqueMiddleware,
 
-        ensureTaAvailbility,
+    ensureTaAvailbility,
 
-        ensureSectionIdInParamsMiddleware,
+    ensureSectionIdInParamsMiddleware,
 
-        asyncHandler(updateSectionHandler)
-    );
-    router.delete(
-        "/:sectionId",
+    asyncHandler(updateSectionHandler)
+  );
+  router.delete(
+    "/:sectionId",
 
-        asyncHandler(deleteSectionHandler)
-    );
+    asyncHandler(deleteSectionHandler)
+  );
 };
 
 export default sectionsRoutes;

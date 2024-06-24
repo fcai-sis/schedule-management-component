@@ -1,7 +1,5 @@
+import { InstructorTeachingModel, LectureModel } from "@fcai-sis/shared-models";
 import { Request, Response, NextFunction } from "express";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
-import LectureModel from "../../data/models/lecture.model";
-
 
 const ensureInstructorAvailbility = async (
   req: Request,
@@ -9,10 +7,14 @@ const ensureInstructorAvailbility = async (
   next: NextFunction
 ) => {
   const { instructorTeachingId, slotId, courseId } = req.body;
-  const instructorTeaching = await InstructorTeachingModel.findById(instructorTeachingId);
+  const instructorTeaching = await InstructorTeachingModel.findById(
+    instructorTeachingId
+  );
 
   if (!instructorTeaching) {
-    return res.status(400).json({ message: "Instructor teaching id not found" });
+    return res
+      .status(400)
+      .json({ message: "Instructor teaching id not found" });
   }
 
   if (instructorTeaching.courseId.toString() !== courseId) {
@@ -21,14 +23,21 @@ const ensureInstructorAvailbility = async (
 
   const semesterId = instructorTeaching.semesterId;
   const instructorId = instructorTeaching.instructorId;
-  const teachingIds = await InstructorTeachingModel.find({ instructorId, semesterId });
-  const lectures = await LectureModel.find({ teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) } });
+  const teachingIds = await InstructorTeachingModel.find({
+    instructorId,
+    semesterId,
+  });
+  const lectures = await LectureModel.find({
+    teachingId: { $in: teachingIds.map((teachingId) => teachingId._id) },
+  });
   for (const lecture of lectures) {
     if (lecture.slotId.toString() === slotId) {
-      return res.status(400).json({ message: "Instructor is busy at this time" });
+      return res
+        .status(400)
+        .json({ message: "Instructor is busy at this time" });
     }
   }
   next();
-}
+};
 
 export default ensureInstructorAvailbility;

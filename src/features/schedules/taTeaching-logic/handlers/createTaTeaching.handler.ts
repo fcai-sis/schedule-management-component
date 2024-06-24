@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
-
-import TaTeachingModel from "../../data/models/taTeaching.model";
+import { SemesterModel, TaTeachingModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
@@ -12,10 +10,11 @@ type HandlerRequest = Request<
   }
 >;
 
-
 const handler = async (req: HandlerRequest, res: Response) => {
   const { taId, courseId } = req.body;
-  const semesterId = await SemesterModel.findOne().sort({ createdAt: -1 }).select("_id");
+  const semesterId = await SemesterModel.findOne()
+    .sort({ createdAt: -1 })
+    .select("_id");
 
   if (!semesterId) {
     return res.status(400).json({ message: "Semester not found" });
@@ -24,7 +23,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const taTeaching = new TaTeachingModel({
     taId,
     courseId,
-    semesterId
+    semesterId,
   });
 
   await taTeaching.save();
@@ -36,7 +35,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   };
 
   return res.status(201).json(response);
-}
+};
 
 const createTaTeachingHandler = handler;
 export default createTaTeachingHandler;

@@ -1,5 +1,5 @@
+import { InstructorTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
 
 type HandlerRequest = Request<
   {},
@@ -11,13 +11,12 @@ type HandlerRequest = Request<
   }
 >;
 
-
 const handler = async (req: HandlerRequest, res: Response) => {
   const { instructorId, courseId, semesterId } = req.body;
   const instructorTeaching = new InstructorTeachingModel({
     instructorId,
     courseId,
-    semesterId
+    semesterId,
   });
 
   await instructorTeaching.save();
@@ -29,7 +28,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   };
 
   return res.status(201).json(response);
-}
+};
 
 const createInstructorTeachingHandler = handler;
 export default createInstructorTeachingHandler;

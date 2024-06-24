@@ -1,16 +1,15 @@
 import { Router } from "express";
 
 import { asyncHandler } from "@fcai-sis/shared-utilities";
+import paginate from "express-paginate";
 import createTaTeachingValidatorMiddleware from "./taTeaching-logic/middlewares/createTaTeachingValidator.middleware";
 import createTaTeachingHandler from "./taTeaching-logic/handlers/createTaTeaching.handler";
 import getPaginatedTaTeachingHandler from "./taTeaching-logic/handlers/getPaginatedTaTeaching.handler";
-import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
 import getTaTeachingHandler from "./taTeaching-logic/handlers/getTaTeaching.handler";
 import getTaTeachingByIdHandler from "./taTeaching-logic/handlers/getTaTeachingById.handler";
-import deleteTaTeachingHandler from "./lecture-logic/handlers/deleteLecture.handler";
+import deleteTaTeachingHandler from "../schedule/handlers/deleteLecture.handler";
 
-
-const taTeachingRoutes =  (router: Router) => {
+const taTeachingRoutes = (router: Router) => {
   router.post(
     "/",
 
@@ -23,27 +22,25 @@ const taTeachingRoutes =  (router: Router) => {
     "/",
 
     asyncHandler(getTaTeachingHandler)
-);
+  );
 
-router.get(
+  router.get(
     "/read",
-
-    paginationQueryParamsMiddleware,
-
+    paginate.middleware(),
     asyncHandler(getPaginatedTaTeachingHandler)
-);
+  );
 
-router.get(
+  router.get(
     "/:taTeachingId",
 
     asyncHandler(getTaTeachingByIdHandler)
-);
+  );
 
-router.delete(
+  router.delete(
     "/:taTeachingId",
 
     asyncHandler(deleteTaTeachingHandler)
-);
+  );
 };
 
 export default taTeachingRoutes;

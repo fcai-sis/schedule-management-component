@@ -1,6 +1,5 @@
+import { InstructorTeachingModel } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
-import InstructorTeachingModel from "../../data/models/instructorTeaching.model";
-
 
 type HandlerRequest = Request<
   {
