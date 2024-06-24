@@ -1,27 +1,36 @@
-import { InstructorTeachingModel, InstructorTeachingType, SemesterModel } from "@fcai-sis/shared-models";
+import {
+  InstructorTeachingModel,
+  InstructorTeachingType,
+  SemesterModel,
+} from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    instructorTeaching: InstructorTeachingType,
+    instructorTeaching: Omit<InstructorTeachingType, "semester">;
   }
 >;
 
-
 const handler = async (req: HandlerRequest, res: Response) => {
   const { instructorTeaching } = req.body;
-  const semester = await SemesterModel.findOne().sort({ createdAt: -1 }).select("_id");
+  const semester = await SemesterModel.findOne()
+    .sort({ createdAt: -1 })
+    .select("_id");
 
   if (!semester) {
-    return res.status(400).json({ message: "Semester not found" });
+    return res.status(400).json({
+      error: {
+        message: "No semester found",
+      },
+    });
   }
 
   const createdInstructorTeaching = new InstructorTeachingModel({
     instructor: instructorTeaching.instructor,
     course: instructorTeaching.course,
-    semester
+    semester: semester._id,
   });
 
   await createdInstructorTeaching.save();
@@ -33,7 +42,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   };
 
   return res.status(201).json(response);
-}
+};
 
 const createInstructorTeachingHandler = handler;
 export default createInstructorTeachingHandler;
