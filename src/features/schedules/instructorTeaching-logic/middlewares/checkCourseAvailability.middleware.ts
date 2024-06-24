@@ -1,30 +1,56 @@
 import { Request, Response, NextFunction } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
+import {
+  InstructorTeachingType,
+  SemesterCourseModel,
+  SemesterModel,
+} from "@fcai-sis/shared-models";
 
+type MiddlewareHandlerRequest = Request<
+  {},
+  {},
+  {
+    instructorTeaching: InstructorTeachingType;
+  }
+>;
 const checkCourseAvailabilityMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: MiddlewareHandlerRequest,
+  res: Response,
+  next: NextFunction
 ) => {
-    const { course } = req.query;
-    const semester = await SemesterModel.findOne({}).sort({ createdAt: -1 });
+  const { instructorTeaching } = req.body;
+  const semester = await SemesterModel.findOne({}).sort({ createdAt: -1 });
+  const latestSemesterCourses = await SemesterCourseModel.find({
+    semester: semester._id,
+  });
 
-    if (!course) {
-        // If courseId is not provided in the request query, skip the check
-        return next();
-    }
+  if (!instructorTeaching.course) {
+    // If course is not provided in the request query, skip the check
+    return next();
+  }
 
-    if (!semester) {
-        return res.status(404).json({ message: "Semester not found" });
-    }
+  if (!semester) {
+    return res.status(404).json({
+      error: {
+        message: "No semester found",
+      },
+    });
+  }
 
-    const courseExists = semester.courseIds.includes(course);
+  const courseExists = latestSemesterCourses.some(
+    (semesterCourse) =>
+      semesterCourse.course._id.toString() ===
+      instructorTeaching.course.toString()
+  );
 
-    if (!courseExists) {
-        return res.status(404).json({ message: "Course not available in this semester" });
-    }
+  if (!courseExists) {
+    return res.status(404).json({
+      error: {
+        message: "Course not found in the latest semester",
+      },
+    });
+  }
 
-    next();
-}
+  next();
+};
 
 export default checkCourseAvailabilityMiddleware;
