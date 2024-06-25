@@ -21,6 +21,8 @@ import getDepartmentScheduleHandler from "./handlers/getDepartmentSchedule.handl
 import ensureDepartmentCodeInParamsMiddleware from "./middlewares/ensureDepartmentCodeInParams.middleware";
 import endSemesterHandler from "./handlers/endSemester.handler";
 import calculateStudentGpaHandler from "./handlers/calculateStudentGpa.handler";
+import calculateLatestSemesterGpas from "./handlers/calculateAllGpas.handler";
+import calculateAllSemesterGpasMiddleware from "./middlewares/calculateAllSemesterGpas.middleware";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -98,16 +100,22 @@ const scheduleRoutes = (router: Router) => {
   // Semester management
   router.post(
     "/semester/end",
-    checkRole([Role.ADMIN]),
-    getLatestSemesterMiddleware,
+    // checkRole([Role.ADMIN]),
+    calculateAllSemesterGpasMiddleware,
     asyncHandler(endSemesterHandler)
   );
 
   router.post(
     "/semester/calculate-student-gpa/:studentId",
-    checkRole([Role.ADMIN]),
+    // checkRole([Role.ADMIN]),
     getLatestSemesterMiddleware,
     asyncHandler(calculateStudentGpaHandler)
+  );
+  router.post(
+    "/semester/calculate-gpas",
+    // checkRole([Role.ADMIN]),
+    getLatestSemesterMiddleware,
+    asyncHandler(calculateLatestSemesterGpas)
   );
 };
 
