@@ -20,6 +20,7 @@ import getHallScheduleHandler from "./handlers/getHallSchedule.handler";
 import getDepartmentScheduleHandler from "./handlers/getDepartmentSchedule.handler";
 import ensureDepartmentCodeInParamsMiddleware from "./middlewares/ensureDepartmentCodeInParams.middleware";
 import endSemesterHandler from "./handlers/endSemester.handler";
+import calculateStudentGpaHandler from "./handlers/calculateStudentGpa.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -100,6 +101,13 @@ const scheduleRoutes = (router: Router) => {
     checkRole([Role.ADMIN]),
     getLatestSemesterMiddleware,
     asyncHandler(endSemesterHandler)
+  );
+
+  router.post(
+    "/semester/calculate-student-gpa/:studentId",
+    checkRole([Role.ADMIN]),
+    getLatestSemesterMiddleware,
+    asyncHandler(calculateStudentGpaHandler)
   );
 };
 
