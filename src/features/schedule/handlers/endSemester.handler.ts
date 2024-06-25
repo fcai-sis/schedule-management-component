@@ -13,60 +13,81 @@ type HandlerRequest = Request<
   {},
   {
     semester: ObjectId;
-    students: IStudent[];
+    studentData: {
+      studentId: ObjectId;
+      gpa: number;
+      creditHours: number;
+      bylaw: ObjectId;
+    }[];
   }
 >;
 
 const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
-  const { semester, students } = req.body;
+  const { semester, studentData } = req.body;
 
   // now all students have their GPAs calculated and their total credit hours calculated, both have been assigned to the academic student model
   // we need to assign the level for each student according to their bylaw
 
-  const updatedStudents = students.map(async (student) => {
-    const academicStudent = await AcademicStudentModel.findOne({
-      student: student._id,
-    });
-    const studentBylaw = await BylawModel.findOne({
-      _id: student.bylaw,
-    });
+  // loop over studentGpaData and assign the gpa and credit hours to the academic student model
+  await Promise.all(
+    studentData.map(async (studentGpaData) => {
+      if (!studentGpaData.gpa || !studentGpaData.creditHours) {
+        return;
+      }
+      const academicStudent = await AcademicStudentModel.findOne({
+        student: studentGpaData.studentId,
+      });
 
-    // loop over the studentBylaw.levelRequirements and check if the student's completed credit hours fall into any of the levels
+      academicStudent.gpa = studentGpaData.gpa;
+      academicStudent.creditHours = studentGpaData.creditHours;
 
-    // console.log(studentBylaw.levelRequirements);
+      await academicStudent.save();
+    })
+  );
 
-    // sort the levelRequirements keys in descending order (so that highest level is checked first)
-    const sortedLevels = Array.from(studentBylaw.levelRequirements.keys())
-      .map(Number)
-      .sort((a, b) => b - a);
+  await Promise.all(
+    studentData.map(async (student) => {
+      if (!student.bylaw) {
+        return;
+      }
+      const academicStudent = await AcademicStudentModel.findOne({
+        student: student.studentId,
+      });
+      const studentBylaw = await BylawModel.findOne({
+        _id: student.bylaw,
+      });
 
-    // Iterate over the sorted levels and find the appropriate level for the student
-    for (const level of sortedLevels) {
-      const requirements = studentBylaw.levelRequirements.get(String(level));
+      // loop over the studentBylaw.levelRequirements and check if the student's completed credit hours fall into any of the levels
 
-      if (studentBylaw.useDetailedHours) {
-        console.log("Using detailed hours");
+      // sort the levelRequirements keys in descending order (so that highest level is checked first)
+      const sortedLevels = Array.from(studentBylaw.levelRequirements.keys())
+        .map(Number)
+        .sort((a, b) => b - a);
 
-        if (
-          academicStudent.creditHours >= requirements.mandatoryHours &&
-          academicStudent.creditHours <=
-            requirements.mandatoryHours + requirements.electiveHours
-        ) {
-          academicStudent.level = level;
-          break;
-        }
-      } else {
-        if (academicStudent.creditHours >= requirements.totalHours) {
-          academicStudent.level = level;
-          break;
+      // Iterate over the sorted levels and find the appropriate level for the student
+      for (const level of sortedLevels) {
+        const requirements = studentBylaw.levelRequirements.get(String(level));
+
+        if (studentBylaw.useDetailedHours) {
+          if (
+            academicStudent.creditHours >= requirements.mandatoryHours &&
+            academicStudent.creditHours <=
+              requirements.mandatoryHours + requirements.electiveHours
+          ) {
+            academicStudent.level = level;
+            break;
+          }
+        } else {
+          if (academicStudent.creditHours >= requirements.totalHours) {
+            academicStudent.level = level;
+            break;
+          }
         }
       }
-    }
 
-    await academicStudent.save();
-
-    return student.studentId;
-  });
+      await academicStudent.save();
+    })
+  );
 
   // update the semester status to ended
   const updatedSemester = await SemesterModel.findByIdAndUpdate(
@@ -79,21 +100,23 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
   );
 
   // create the studentsemester records { consists of a student, a semester, a semesterDate, a semesterGpa, and a semesterLevel }
-  const studentSemesters = students.map(async (student) => {
-    const academicStudent = await AcademicStudentModel.findOne({
-      student: student._id,
-    });
+  await Promise.all(
+    studentData.map(async (student) => {
+      const academicStudent = await AcademicStudentModel.findOne({
+        student: student.studentId,
+      });
 
-    const studentSemester = new StudentSemesterModel({
-      student: student._id,
-      semester,
-      semesterDate: updatedSemester.endedAt,
-      cumulativeGpa: academicStudent.gpa,
-      semesterLevel: academicStudent.level,
-    });
+      const studentSemester = new StudentSemesterModel({
+        student: student.studentId,
+        semester,
+        semesterDate: updatedSemester.endedAt,
+        cumulativeGpa: academicStudent.gpa,
+        semesterLevel: academicStudent.level,
+      });
 
-    return studentSemester.save();
-  });
+      await studentSemester.save();
+    })
+  );
 
   const response = {
     actions: {

@@ -1,14 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { ObjectId } from "mongoose";
 import {
   AcademicStudentModel,
   EnrollmentModel,
-  IStudent,
   SemesterModel,
   StudentModel,
 } from "@fcai-sis/shared-models";
 
-type HandlerRequest = Request<{}, {}, {}>;
 const calculateAllSemesterGpasMiddleware = async (
   req: Request,
   res: Response,
@@ -45,19 +42,23 @@ const calculateAllSemesterGpasMiddleware = async (
     });
   }
 
-  for (const student of students) {
+  const studentGpaDataPromises = students.map(async (student) => {
     const academicStudent = await AcademicStudentModel.findOne({
       student: student._id,
     });
-
-    if (!academicStudent) {
-      continue;
-    }
 
     const enrollments = await EnrollmentModel.find({
       student: student._id,
       semester: semester,
     }).populate("course");
+
+    if (!enrollments || enrollments.length === 0) {
+      return {
+        studentId: student._id,
+        gpa: null,
+        creditHours: null,
+      };
+    }
 
     const gradesAccordingToBylaw = enrollments.map((enrollment) => {
       const creditHours = enrollment.course.creditHours;
@@ -93,19 +94,24 @@ const calculateAllSemesterGpasMiddleware = async (
     );
 
     if (!studentGpa) {
-      return res.status(500).json({
-        error: {
-          message: `Error calculating GPA for student ${student._id}`,
-        },
-      });
+      return {
+        studentId: student._id,
+        gpa: null,
+        creditHours: null,
+      };
     }
 
-    academicStudent.gpa = studentGpa.gpa;
-    academicStudent.creditHours = studentGpa.totalCreditHours;
+    return {
+      studentId: student._id,
+      gpa: studentGpa.gpa,
+      creditHours: studentGpa.totalCreditHours,
+      bylaw: student.bylaw._id,
+    };
+  });
 
-    await academicStudent.save();
-  }
+  const studentData = await Promise.all(studentGpaDataPromises);
 
+  req.body.studentData = studentData;
   req.body.students = students;
   req.body.semester = semester;
   next();
