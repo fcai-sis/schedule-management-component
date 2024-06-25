@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   AcademicStudentModel,
   EnrollmentModel,
+  EnrollmentStatusEnum,
   SemesterModel,
   StudentModel,
 } from "@fcai-sis/shared-models";
@@ -74,6 +75,11 @@ const calculateAllSemesterGpasMiddleware = async (
           weight = bylawWeight.weight;
 
           enrollment.grade = key;
+          // TODO: add passCriteria to bylaw so we don't have to hardcode this
+          if (grade < 50) {
+            enrollment.status = EnrollmentStatusEnum[2];
+          }
+          enrollment.status = EnrollmentStatusEnum[1];
           enrollment.save();
         }
       });
