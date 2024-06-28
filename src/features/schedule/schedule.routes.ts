@@ -23,6 +23,7 @@ import endSemesterHandler from "./handlers/endSemester.handler";
 import calculateStudentGpaHandler from "./handlers/calculateStudentGpa.handler";
 import calculateLatestSemesterGpas from "./handlers/calculateAllGpas.handler";
 import calculateAllSemesterGpasMiddleware from "./middlewares/calculateAllSemesterGpas.middleware";
+import startSemesterHandler from "./handlers/startSemester.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -98,6 +99,14 @@ const scheduleRoutes = (router: Router) => {
   );
 
   // Semester management
+
+  router.post(
+    "/semester/start",
+    // checkRole([Role.ADMIN]),
+    getLatestSemesterMiddleware,
+    asyncHandler(startSemesterHandler)
+  );
+
   router.post(
     "/semester/end",
     // checkRole([Role.ADMIN]),
