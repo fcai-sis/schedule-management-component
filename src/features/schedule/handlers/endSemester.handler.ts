@@ -1,10 +1,10 @@
 import {
   AcademicStudentModel,
   BylawModel,
-  IStudent,
   SemesterModel,
   StudentSemesterModel,
 } from "@fcai-sis/shared-models";
+import env from "env";
 import { Request, Response } from "express";
 import { ObjectId } from "mongoose";
 
@@ -117,6 +117,25 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
       await studentSemester.save();
     })
   );
+
+  // // call the assignDepartmentsBasedOnStudentPreferencesHandler endpoint
+  // const assignDepartmentsResponse = await fetch(
+  //   `${env.STUDENT_PREFERENCE_API}`,
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }
+  // );
+
+  // if (!assignDepartmentsResponse.ok) {
+  //   return res.status(500).json({
+  //     error: {
+  //       message: "Error assigning departments based on student preferences",
+  //     },
+  //   });
+  // }
 
   const response = {
     actions: {
