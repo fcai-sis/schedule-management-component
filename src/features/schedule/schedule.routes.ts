@@ -24,6 +24,7 @@ import calculateStudentGpaHandler from "./handlers/calculateStudentGpa.handler";
 import calculateLatestSemesterGpas from "./handlers/calculateAllGpas.handler";
 import calculateAllSemesterGpasMiddleware from "./middlewares/calculateAllSemesterGpas.middleware";
 import startSemesterHandler from "./handlers/startSemester.handler";
+import getAuthenticatedInstructorTeachingsHandler from "./handlers/getMyInstructorTeachings.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -49,6 +50,12 @@ const scheduleRoutes = (router: Router) => {
   // router.delete("/section/:sectionId", asyncHandler(deleteSectionHandler));
 
   // Schedule views
+  router.get(
+    "/schedule/instructor-teachings",
+    checkRole([Role.INSTRUCTOR]),
+    getLatestSemesterMiddleware,
+    asyncHandler(getAuthenticatedInstructorTeachingsHandler)
+  );
   router.get(
     "/schedule/student",
     checkRole([Role.STUDENT]),
