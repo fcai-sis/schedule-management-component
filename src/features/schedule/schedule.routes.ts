@@ -25,6 +25,11 @@ import calculateLatestSemesterGpas from "./handlers/calculateAllGpas.handler";
 import calculateAllSemesterGpasMiddleware from "./middlewares/calculateAllSemesterGpas.middleware";
 import startSemesterHandler from "./handlers/startSemester.handler";
 import getAuthenticatedInstructorTeachingsHandler from "./handlers/getMyInstructorTeachings.handler";
+import getEligibleStudentScheduleHandler from "./handlers/getEligibleCourseSchedule.handler";
+import getAllLecturesHandler from "./handlers/getAllLectures.handler";
+import deleteLectureHandler from "./handlers/deleteLecture.handler";
+import getAllSectionsHandler from "./handlers/getAllSections.handler";
+import deleteSectionHandler from "./handlers/deleteSection.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -36,7 +41,8 @@ const scheduleRoutes = (router: Router) => {
     asyncHandler(createLectureHandler)
   );
   // router.patch("/lecture/:lectureId", asyncHandler(updateLectureHandler));
-  // router.delete("/lecture/:lectureId", asyncHandler(deleteLectureHandler));
+  router.delete("/lecture/:lectureId", asyncHandler(deleteLectureHandler));
+  router.get("/lectures", asyncHandler(getAllLecturesHandler));
 
   // Section management
   router.post(
@@ -46,8 +52,9 @@ const scheduleRoutes = (router: Router) => {
     ensureUniqueHallAndSlotMiddleware,
     asyncHandler(createSectionHandler)
   );
+  router.get("/sections", asyncHandler(getAllSectionsHandler));
   // router.patch("/section/:sectionId", asyncHandler(updateSectionHandler));
-  // router.delete("/section/:sectionId", asyncHandler(deleteSectionHandler));
+  router.delete("/section/:sectionId", asyncHandler(deleteSectionHandler));
 
   // Schedule views
   router.get(
@@ -61,6 +68,13 @@ const scheduleRoutes = (router: Router) => {
     checkRole([Role.STUDENT]),
     getLatestSemesterMiddleware,
     asyncHandler(getCurrentStudentScheduleHandler)
+  );
+
+  router.get(
+    "/schedule/eligible",
+    checkRole([Role.STUDENT]),
+    getLatestSemesterMiddleware,
+    asyncHandler(getEligibleStudentScheduleHandler as any)
   );
 
   router.get(
