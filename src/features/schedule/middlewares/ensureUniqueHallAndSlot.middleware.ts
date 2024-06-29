@@ -43,14 +43,18 @@ export const ensureUniqueHallAndSlotMiddleware = async (
   ]);
 
   if (existingLecture)
-    return res
-      .status(400)
-      .json({ message: "Hall and slot already assigned to a lecture" });
+    return res.status(400).json({
+      error: {
+        message: "Hall and slot already assigned to a lecture",
+      },
+    });
 
   if (existingSection)
-    return res
-      .status(400)
-      .json({ message: "Hall and slot already assigned to a section" });
+    return res.status(400).json({
+      error: {
+        message: "Hall and slot already assigned to a lecture",
+      },
+    });
 
   next();
 };
