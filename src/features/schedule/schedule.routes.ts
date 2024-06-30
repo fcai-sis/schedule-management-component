@@ -121,7 +121,7 @@ const scheduleRoutes = (router: Router) => {
 
   // Schedule views
   router.get(
-    "/schedule/student",
+    "/student",
     checkRole([Role.STUDENT]),
     getLatestSemesterMiddleware,
     asyncHandler(getCurrentStudentScheduleHandler)
