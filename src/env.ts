@@ -4,6 +4,7 @@ export const env = {
   LOGS_PATH: process.env.LOGS_PATH,
   MONGO_URI: process.env.MONGO_URI,
   JWT_SECRET: process.env.JWT_SECRET,
+  ENROLLMENTS_API_URL: process.env.ENROLLMENTS_API_URL,
   // STUDENT_PREFERENCE_API: process.env.STUDENT_PREFERENCE_API,
 };
 

@@ -1,7 +1,5 @@
 import { TokenPayload } from "@fcai-sis/shared-middlewares";
 import {
-  EnrollmentModel,
-  IEnrollment,
   LectureModel,
   SectionModel,
   StudentModel,
@@ -9,77 +7,48 @@ import {
 import { Request, Response } from "express";
 import { ObjectId } from "mongoose";
 import { formatLecture, formatSection } from "../utils";
+import env from "../../../env";
 
 type HandlerRequest = Request<
   {},
   {},
   {
+    token: string;
     user: TokenPayload;
     semester: ObjectId;
   }
 >;
 
-/**
-{
-    slot: dummySlots[12],
-    hall: dummyHalls[2],
-    type: "lecture",
-    lecture: {
-      course: {
-        code: "CS201",
-        name: {
-          en: "Data Structures and Algorithms",
-          ar: "هياكل البيانات والخوارزميات",
-        },
-      },
-      instructor: {
-        fullName: "Dr. Jane Smith",
-      },
-    },
-  },
-  {
-    slot: dummySlots[22],
-    hall: dummyHalls[3],
-    type: "section",
-    secion: {
-      group: "S1/S2",
-      course: {
-        code: "CS301",
-        name: {
-          en: "Software Engineering",
-          ar: "هندسة البرمجيات",
-        },
-      },
-      instructor: {
-        fullName: "Dr. Mark Johnson",
-      },
-    },
-  },
- */
-
-const getCurrentStudentScheduleHandler = async (
+const getEligibleStudentScheduleHandler = async (
   req: HandlerRequest,
   res: Response
 ) => {
-  const { user, semester } = req.body;
+  const { user, token, semester } = req.body;
   const student = await StudentModel.findOne({ user: user.userId });
 
   if (!student)
     return res.status(404).json({ error: { message: "Student not found" } });
 
-  const enrollments: IEnrollment[] = await EnrollmentModel.find({
-    student: student._id,
-    semester,
-  });
-  const courses = enrollments.map((enrollment) => enrollment.course);
+  const { courses } = await fetch(`${env.ENROLLMENTS_API_URL}/eligible`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => res.json());
+
+  const coursesIds = courses.map((course: any) => course.course._id);
 
   const lectures = await LectureModel.find({
-    course: { $in: courses },
+    course: { $in: coursesIds },
     semester,
   })
     .populate("course")
     .populate("hall")
     .populate("slot");
+
+  console.log(lectures);
+
   const sections = await SectionModel.find({
     course: { $in: courses },
     semester,
@@ -97,4 +66,4 @@ const getCurrentStudentScheduleHandler = async (
   });
 };
 
-export default getCurrentStudentScheduleHandler;
+export default getEligibleStudentScheduleHandler;

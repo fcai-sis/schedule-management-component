@@ -37,6 +37,7 @@ import deleteTaTeachingHandler from "./handlers/deleteTaTeaching.handler";
 import getAllInstructorTeachingsHandler from "./handlers/getAllInstructorTeachings.handler";
 import getAllTaTeachingsHandler from "./handlers/getAllTaTeachings.handler";
 import getAuthenticatedTaTeachingsHandler from "./handlers/getMyTaTeachings.handler";
+import getEligibleStudentScheduleHandler from "./handlers/getEligibleStudentSchedule.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -127,12 +128,13 @@ const scheduleRoutes = (router: Router) => {
     asyncHandler(getCurrentStudentScheduleHandler)
   );
 
-  // router.get(
-  //   "/schedule/eligible",
-  //   checkRole([Role.STUDENT]),
-  //   getLatestSemesterMiddleware,
-  //   asyncHandler(getEligibleStudentScheduleHandler as any)
-  // );
+  router.get(
+    "/eligible",
+    checkRole([Role.STUDENT]),
+    getLatestSemesterMiddleware,
+    asyncHandler(getEligibleStudentScheduleHandler)
+  );
+
   router.get(
     "/schedule/instructor",
     checkRole([Role.INSTRUCTOR]),
