@@ -1,12 +1,7 @@
 import { Router } from "express";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
-
 import createLectureHandler from "./handlers/createLecture.handler";
 import createSectionHandler from "./handlers/createSection.handler";
-// import updateLectureHandler from "./handlers/updateLecture.handler";
-// import deleteLectureHandler from "./handlers/deleteLecture.handler";
-// import updateSectionHandler from "./handlers/updateSection.handler";
-// import deleteSectionHandler from "./handlers/deleteSection.handler";
 import getLatestSemesterMiddleware from "./middlewares/getLatestSemester.middleware";
 import validateCreateLectureRequestMiddlware from "./middlewares/validateCreateLectureRequest.middleware";
 import ensureUniqueHallAndSlotMiddleware from "./middlewares/ensureUniqueHallAndSlot.middleware";
@@ -25,11 +20,23 @@ import calculateLatestSemesterGpas from "./handlers/calculateAllGpas.handler";
 import calculateAllSemesterGpasMiddleware from "./middlewares/calculateAllSemesterGpas.middleware";
 import startSemesterHandler from "./handlers/startSemester.handler";
 import getAuthenticatedInstructorTeachingsHandler from "./handlers/getMyInstructorTeachings.handler";
-import getEligibleStudentScheduleHandler from "./handlers/getEligibleCourseSchedule.handler";
 import getAllLecturesHandler from "./handlers/getAllLectures.handler";
 import deleteLectureHandler from "./handlers/deleteLecture.handler";
 import getAllSectionsHandler from "./handlers/getAllSections.handler";
 import deleteSectionHandler from "./handlers/deleteSection.handler";
+import validateCreateInstructorTeachingRequestMiddlware from "./middlewares/validateCreateInstructorTeaching.middleware";
+import createInstructorTeachingHandler from "./handlers/createInstructorTeaching.handler";
+import ensureLectureIdInParamsMiddleware from "./middlewares/ensureLectureIdInParams.middleware";
+import ensureSectionIdInParamsMiddleware from "./middlewares/ensureSectionIdInParams.middleware";
+import ensureInstructorTeachingIdInParamsMiddleware from "./middlewares/ensureInstructorTeachingIdInParams.middleware";
+import deleteInstructorTeachingHandler from "./handlers/deleteInstructorTeaching.handler";
+import validateCreateTaTeachingRequestMiddlware from "./middlewares/validateCreateTaTeaching.middleware";
+import createTaTeachingHandler from "./handlers/createTaTeaching.handler";
+import ensureTaTeachingIdInParamsMiddleware from "./middlewares/ensureTaTeachingIdInParams.middleware";
+import deleteTaTeachingHandler from "./handlers/deleteTaTeaching.handler";
+import getAllInstructorTeachingsHandler from "./handlers/getAllInstructorTeachings.handler";
+import getAllTaTeachingsHandler from "./handlers/getAllTaTeachings.handler";
+import getAuthenticatedTaTeachingsHandler from "./handlers/getMyTaTeachings.handler";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -41,7 +48,11 @@ const scheduleRoutes = (router: Router) => {
     asyncHandler(createLectureHandler)
   );
   // router.patch("/lecture/:lectureId", asyncHandler(updateLectureHandler));
-  router.delete("/lecture/:lectureId", asyncHandler(deleteLectureHandler));
+  router.delete(
+    "/lecture/:lectureId",
+    ensureLectureIdInParamsMiddleware,
+    asyncHandler(deleteLectureHandler)
+  );
   router.get("/lectures", asyncHandler(getAllLecturesHandler));
 
   // Section management
@@ -54,27 +65,66 @@ const scheduleRoutes = (router: Router) => {
   );
   router.get("/sections", asyncHandler(getAllSectionsHandler));
   // router.patch("/section/:sectionId", asyncHandler(updateSectionHandler));
-  router.delete("/section/:sectionId", asyncHandler(deleteSectionHandler));
+  router.delete(
+    "/section/:sectionId",
+    ensureSectionIdInParamsMiddleware,
+    asyncHandler(deleteSectionHandler)
+  );
 
-  // Schedule views
+  // Teaching management
+
+  router.post(
+    "/instructor-teaching",
+    getLatestSemesterMiddleware,
+    validateCreateInstructorTeachingRequestMiddlware,
+    asyncHandler(createInstructorTeachingHandler)
+  );
+
   router.get(
-    "/schedule/instructor-teachings",
+    "/instructor-teaching",
+    asyncHandler(getAllInstructorTeachingsHandler)
+  );
+
+  router.get(
+    "/schedule/instructor-teaching/me",
     checkRole([Role.INSTRUCTOR]),
     getLatestSemesterMiddleware,
     asyncHandler(getAuthenticatedInstructorTeachingsHandler)
   );
+
+  router.delete(
+    "/instructor-teaching/:instructorTeachingId",
+    ensureInstructorTeachingIdInParamsMiddleware,
+    asyncHandler(deleteInstructorTeachingHandler)
+  );
+
+  router.post(
+    "/ta-teaching",
+    getLatestSemesterMiddleware,
+    validateCreateTaTeachingRequestMiddlware,
+    asyncHandler(createTaTeachingHandler)
+  );
+  router.get("/ta-teaching", asyncHandler(getAllTaTeachingsHandler));
+
+  router.get(
+    "/schedule/ta-teaching/me",
+    checkRole([Role.TEACHING_ASSISTANT]),
+    getLatestSemesterMiddleware,
+    asyncHandler(getAuthenticatedTaTeachingsHandler)
+  );
+
+  router.delete(
+    "/ta-teaching/:taTeachingId",
+    ensureTaTeachingIdInParamsMiddleware,
+    asyncHandler(deleteTaTeachingHandler)
+  );
+
+  // Schedule views
   router.get(
     "/schedule/student",
     checkRole([Role.STUDENT]),
     getLatestSemesterMiddleware,
     asyncHandler(getCurrentStudentScheduleHandler)
-  );
-
-  router.get(
-    "/schedule/eligible",
-    checkRole([Role.STUDENT]),
-    getLatestSemesterMiddleware,
-    asyncHandler(getEligibleStudentScheduleHandler as any)
   );
 
   router.get(
