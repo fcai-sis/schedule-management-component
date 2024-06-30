@@ -127,6 +127,12 @@ const scheduleRoutes = (router: Router) => {
     asyncHandler(getCurrentStudentScheduleHandler)
   );
 
+  // router.get(
+  //   "/schedule/eligible",
+  //   checkRole([Role.STUDENT]),
+  //   getLatestSemesterMiddleware,
+  //   asyncHandler(getEligibleStudentScheduleHandler as any)
+  // );
   router.get(
     "/schedule/instructor",
     checkRole([Role.INSTRUCTOR]),
