@@ -9,6 +9,7 @@ import deleteSemesterHandler from "./handlers/deleteSemester.handler";
 import getSemesterByIdHandler from "./handlers/getSemesterById.handler";
 import ensureSemesterIdInParamsMiddleware from "./middlewares/ensureSemesterIdInParams.middleware";
 import validateCreateSemesterMiddleware from "./middlewares/validateCreateSemester.middleware";
+import validateUpdateSemesterMiddleware from "./middlewares/validateUpdateSemester.middleware";
 
 const semestersRoutes = (router: Router) => {
   router.post(
@@ -28,6 +29,7 @@ const semestersRoutes = (router: Router) => {
   router.patch(
     "/:semesterId",
     ensureSemesterIdInParamsMiddleware,
+    validateUpdateSemesterMiddleware,
     asyncHandler(updateSemesterHandler)
   );
 
