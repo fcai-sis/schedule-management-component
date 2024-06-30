@@ -21,13 +21,13 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const response = {
     semester: {
       ...latestSemester.toObject(),
-      courses: semesterCourses.map((semesterCourse) => ({
-        id: semesterCourse.course._id,
-        name: semesterCourse.course.name,
-        code: semesterCourse.course.code,
-        creditHours: semesterCourse.course.creditHours,
-      })),
     },
+    courses: semesterCourses.map((semesterCourse) => ({
+      id: semesterCourse.course._id,
+      name: semesterCourse.course.name,
+      code: semesterCourse.course.code,
+      creditHours: semesterCourse.course.creditHours,
+    })),
   };
 
   return res.status(200).json(response);
