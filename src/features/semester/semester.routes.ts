@@ -10,6 +10,7 @@ import getSemesterByIdHandler from "./handlers/getSemesterById.handler";
 import ensureSemesterIdInParamsMiddleware from "./middlewares/ensureSemesterIdInParams.middleware";
 import validateCreateSemesterMiddleware from "./middlewares/validateCreateSemester.middleware";
 import validateUpdateSemesterMiddleware from "./middlewares/validateUpdateSemester.middleware";
+import getLatestSemesterHandler from "./handlers/getLatestSemester.handler";
 
 const semestersRoutes = (router: Router) => {
   router.post(
@@ -19,6 +20,8 @@ const semestersRoutes = (router: Router) => {
   );
 
   router.get("/", asyncHandler(fetchAllSemesterHandler));
+
+  router.get("/latest", asyncHandler(getLatestSemesterHandler));
 
   router.get(
     "/:semesterId",
