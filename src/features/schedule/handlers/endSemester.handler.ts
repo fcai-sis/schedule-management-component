@@ -25,7 +25,7 @@ type HandlerRequest = Request<
 const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
   const { semester, studentData } = req.body;
 
-  // now all students have their GPAs calculated and their total credit hours calculated, both have been assigned to the academic student model
+  // now all students have their GPAs calculated and their total credit hours calculated
   // we need to assign the level for each student according to their bylaw
 
   // loop over studentGpaData and assign the gpa and credit hours to the academic student model
@@ -69,6 +69,7 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
         const requirements = studentBylaw.levelRequirements.get(String(level));
 
         if (studentBylaw.useDetailedHours) {
+          // TODO: add mandatory hours and elective hours to academic student model and remove totalCreditHours
           if (
             academicStudent.creditHours >= requirements.mandatoryHours &&
             academicStudent.creditHours <=
