@@ -67,7 +67,7 @@ const calculateAllSemesterGpasMiddleware = async (
       let weight = 0;
 
       // loop over the bylaw.gradeWeights map and find the grade weight
-      student.bylaw.gradeWeights.forEach((bylawWeight: any, key: any) => {
+      student.bylaw.gradeWeights.forEach(async (bylawWeight: any, key: any) => {
         if (
           grade >= bylawWeight.percentage.min &&
           grade <= bylawWeight.percentage.max
@@ -78,9 +78,10 @@ const calculateAllSemesterGpasMiddleware = async (
           // TODO: add passCriteria to bylaw so we don't have to hardcode this
           if (grade < 50) {
             enrollment.status = EnrollmentStatusEnum[2];
+          } else {
+            enrollment.status = EnrollmentStatusEnum[1];
           }
-          enrollment.status = EnrollmentStatusEnum[1];
-          enrollment.save();
+          await enrollment.save();
         }
       });
 
@@ -90,7 +91,7 @@ const calculateAllSemesterGpasMiddleware = async (
       };
     });
 
-    const oldGpa = academicStudent.gpa ? academicStudent.gpa : null;
+    const oldGpa = academicStudent.gpa;
     const oldTotalCreditHours = academicStudent.creditHours;
 
     const studentGpa = calculateGPA(
@@ -118,7 +119,6 @@ const calculateAllSemesterGpasMiddleware = async (
   const studentData = await Promise.all(studentGpaDataPromises);
 
   req.body.studentData = studentData;
-  req.body.students = students;
   req.body.semester = semester;
   next();
 };
