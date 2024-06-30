@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { SemesterModel } from "@fcai-sis/shared-models";
-
+import { SemesterCourseModel, SemesterModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{ semesterId: string }, {}, {}>;
 
@@ -20,9 +19,19 @@ const handler = async (req: HandlerRequest, res: Response) => {
     });
   }
 
+  const semesterCourses = await SemesterCourseModel.find({
+    semester: semesterId,
+  }).populate("course");
+
   const response = {
     semester: {
       ...semester.toObject(),
+      courses: semesterCourses.map((semesterCourse) => ({
+        id: semesterCourse.course._id,
+        name: semesterCourse.course.name,
+        code: semesterCourse.course.code,
+        creditHours: semesterCourse.course.creditHours,
+      })),
     },
   };
 
