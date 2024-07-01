@@ -55,7 +55,7 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
 
       if (
         studentGpaData.mandatoryHours + studentGpaData.electiveHours >=
-        50 // TODO: add graduation criteria to bylaw model
+        studentBylaw.graduateRequirement
       ) {
         academicStudent.isGraduated = true;
       }
