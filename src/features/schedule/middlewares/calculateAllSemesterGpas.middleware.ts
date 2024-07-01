@@ -78,8 +78,7 @@ const calculateAllSemesterGpasMiddleware = async (
           weight = bylawWeight.weight;
 
           enrollment.grade = key;
-          // TODO: add passCriteria to bylaw so we don't have to hardcode this
-          if (grade < 50) {
+          if (grade < student.bylaw.coursePassCriteria) {
             enrollment.status = EnrollmentStatusEnum[2];
           } else {
             enrollment.status = EnrollmentStatusEnum[1];
