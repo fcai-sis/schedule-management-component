@@ -1,7 +1,9 @@
 import {
   AcademicStudentModel,
   BylawModel,
+  GraduatedStudentModel,
   SemesterModel,
+  StudentModel,
   StudentSemesterModel,
 } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
@@ -45,6 +47,18 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
       academicStudent.gpa = studentGpaData.gpa;
       academicStudent.mandatoryHours = studentGpaData.mandatoryHours;
       academicStudent.electiveHours = studentGpaData.electiveHours;
+      // check if the total credit hours are greater than or equal to the minimum credit hours required for the bylaw
+      // if so, set the student isGraduated flag to true
+      const studentBylaw = await BylawModel.findOne({
+        _id: studentGpaData.bylaw,
+      });
+
+      if (
+        studentGpaData.mandatoryHours + studentGpaData.electiveHours >=
+        50 // TODO: add graduation criteria to bylaw model
+      ) {
+        academicStudent.isGraduated = true;
+      }
 
       await academicStudent.save();
     })
@@ -57,7 +71,11 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
       }
       const academicStudent = await AcademicStudentModel.findOne({
         student: student.studentId,
+        isGraduated: false,
       });
+      if (!academicStudent) {
+        return;
+      }
       const studentBylaw = await BylawModel.findOne({
         _id: student.bylaw,
       });
@@ -143,6 +161,28 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
   //     },
   //   });
   // }
+
+  const graduatedStudents = await AcademicStudentModel.find({
+    isGraduated: true,
+  });
+
+  // Move the students who graduated from the Student Model collection to the graduated students collection
+  await Promise.all(
+    graduatedStudents.map(async (student) => {
+      const graduatedStudent = await StudentModel.findOne({
+        _id: student.student,
+      });
+
+      // the graduated student model schema is the same as the student model schema
+      // so we can just create a new graduated student model with the student data
+      const newGraduatedStudent = new GraduatedStudentModel({
+        ...graduatedStudent.toObject(),
+      });
+
+      await newGraduatedStudent.save();
+      // await graduatedStudent.deleteOne();
+    })
+  );
 
   const response = {
     actions: {
