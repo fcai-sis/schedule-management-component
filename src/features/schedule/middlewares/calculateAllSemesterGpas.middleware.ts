@@ -88,9 +88,13 @@ const calculateAllSemesterGpasMiddleware = async (
         }
       });
 
+      if (enrollment.status === EnrollmentStatusEnum[2]) {
+        weight = 0;
+      }
+
       return {
         weight,
-        creditHours,
+        creditHours: weight === 0 ? 0 : creditHours,
         courseType,
       };
     });
