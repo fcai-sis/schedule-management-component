@@ -4,7 +4,6 @@ import {
   SemesterModel,
   StudentSemesterModel,
 } from "@fcai-sis/shared-models";
-import env from "env";
 import { Request, Response } from "express";
 import { ObjectId } from "mongoose";
 
@@ -16,7 +15,8 @@ type HandlerRequest = Request<
     studentData: {
       studentId: ObjectId;
       gpa: number;
-      creditHours: number;
+      mandatoryHours: number;
+      electiveHours: number;
       bylaw: ObjectId;
     }[];
   }
@@ -31,7 +31,11 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
   // loop over studentGpaData and assign the gpa and credit hours to the academic student model
   await Promise.all(
     studentData.map(async (studentGpaData) => {
-      if (!studentGpaData.gpa || !studentGpaData.creditHours) {
+      if (
+        !studentGpaData.gpa ||
+        !studentGpaData.mandatoryHours ||
+        !studentGpaData.electiveHours
+      ) {
         return;
       }
       const academicStudent = await AcademicStudentModel.findOne({
@@ -39,7 +43,8 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
       });
 
       academicStudent.gpa = studentGpaData.gpa;
-      academicStudent.creditHours = studentGpaData.creditHours;
+      academicStudent.mandatoryHours = studentGpaData.mandatoryHours;
+      academicStudent.electiveHours = studentGpaData.electiveHours;
 
       await academicStudent.save();
     })
@@ -69,17 +74,18 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
         const requirements = studentBylaw.levelRequirements.get(String(level));
 
         if (studentBylaw.useDetailedHours) {
-          // TODO: add mandatory hours and elective hours to academic student model and remove totalCreditHours
           if (
-            academicStudent.creditHours >= requirements.mandatoryHours &&
-            academicStudent.creditHours <=
-              requirements.mandatoryHours + requirements.electiveHours
+            academicStudent.mandatoryHours >= requirements.mandatoryHours &&
+            academicStudent.electiveHours >= requirements.electiveHours
           ) {
             academicStudent.level = level;
             break;
           }
         } else {
-          if (academicStudent.creditHours >= requirements.totalHours) {
+          if (
+            academicStudent.mandatoryHours + academicStudent.electiveHours >=
+            requirements.totalHours
+          ) {
             academicStudent.level = level;
             break;
           }

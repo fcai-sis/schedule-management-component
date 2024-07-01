@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import {
   AcademicStudentModel,
+  CourseTypeEnum,
   EnrollmentModel,
   EnrollmentStatusEnum,
   SemesterModel,
@@ -57,12 +58,14 @@ const calculateAllSemesterGpasMiddleware = async (
       return {
         studentId: student._id,
         gpa: null,
-        creditHours: null,
+        mandatoryHours: null,
+        electiveHours: null,
       };
     }
 
     const gradesAccordingToBylaw = enrollments.map((enrollment) => {
       const creditHours = enrollment.course.creditHours;
+      const courseType = enrollment.course.courseType;
       const grade = enrollment.termWorkMark + enrollment.finalExamMark;
       let weight = 0;
 
@@ -88,30 +91,35 @@ const calculateAllSemesterGpasMiddleware = async (
       return {
         weight,
         creditHours,
+        courseType,
       };
     });
 
     const oldGpa = academicStudent.gpa;
-    const oldTotalCreditHours = academicStudent.creditHours;
+    const oldMandatoryHours = academicStudent.mandatoryHours;
+    const oldElectiveHours = academicStudent.electiveHours;
 
     const studentGpa = calculateGPA(
       gradesAccordingToBylaw,
       oldGpa,
-      oldTotalCreditHours
+      oldMandatoryHours,
+      oldElectiveHours
     );
 
     if (!studentGpa) {
       return {
         studentId: student._id,
         gpa: null,
-        creditHours: null,
+        mandatoryHours: null,
+        electiveHours: null,
       };
     }
 
     return {
       studentId: student._id,
       gpa: studentGpa.gpa,
-      creditHours: studentGpa.totalCreditHours,
+      mandatoryHours: studentGpa.mandatoryHours,
+      electiveHours: studentGpa.electiveHours,
       bylaw: student.bylaw._id,
     };
   });
@@ -126,26 +134,39 @@ const calculateAllSemesterGpasMiddleware = async (
 export default calculateAllSemesterGpasMiddleware;
 
 function calculateGPA(
-  grades: { weight: number; creditHours: number }[],
+  grades: { weight: number; creditHours: number; courseType: string }[],
   oldGpa: number,
-  oldTotalCreditHours: number
+  oldMandatoryHours: number,
+  oldElectiveHours: number
 ) {
   let totalWeight = 0;
   let totalCreditHours = 0;
+  let mandatoryHours = 0;
+  let electiveHours = 0;
   grades.forEach((grade) => {
     totalWeight += grade.weight * grade.creditHours;
+    // check courseType, if it's mandatory, add to mandatoryHours, else add to electiveHours
+    if (
+      grade.courseType === CourseTypeEnum[0] ||
+      grade.courseType === CourseTypeEnum[2]
+    ) {
+      mandatoryHours += grade.creditHours;
+    } else {
+      electiveHours += grade.creditHours;
+    }
+
     totalCreditHours += grade.creditHours;
   });
 
   const calculatedGpa = totalWeight / totalCreditHours;
   const newGpa = oldGpa ? (calculatedGpa + oldGpa) / 2 : calculatedGpa;
 
-  const newTotalCreditHours = oldTotalCreditHours
-    ? totalCreditHours + oldTotalCreditHours
-    : totalCreditHours;
+  const newMandatoryHours = oldMandatoryHours + mandatoryHours;
+  const newElectiveHours = oldElectiveHours + electiveHours;
 
   return {
     gpa: newGpa,
-    totalCreditHours: newTotalCreditHours,
+    mandatoryHours: newMandatoryHours,
+    electiveHours: newElectiveHours,
   };
 }
