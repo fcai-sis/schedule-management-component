@@ -24,7 +24,8 @@ const getCurrentTaScheduleHandler = async (
   const { user, semester } = req.body;
   const ta = await TeachingAssistantModel.findOne({ user: user.userId });
 
-  if (!ta) return res.status(404).json({ error: { message: "TA not found" } });
+  if (!ta)
+    return res.status(404).json({ errors: [{ message: "TA not found" }] });
 
   const teachings: ITaTeaching[] = await TaTeachingModel.find({
     ta: ta._id,
@@ -38,7 +39,7 @@ const getCurrentTaScheduleHandler = async (
   });
 
   return res.status(200).json({
-    message: "Current Student Schedule",
+    message: "Current TA Schedule",
     schedule: {
       sections,
     },

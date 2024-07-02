@@ -27,7 +27,7 @@ const getEligibleStudentScheduleHandler = async (
   const student = await StudentModel.findOne({ user: user.userId });
 
   if (!student)
-    return res.status(404).json({ error: { message: "Student not found" } });
+    return res.status(404).json({ errors: [{ message: "Student not found" }] });
 
   const { courses } = await fetch(`${env.ENROLLMENTS_API_URL}/eligible`, {
     method: "GET",

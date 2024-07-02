@@ -25,7 +25,9 @@ const getCurrentInstructorScheduleHandler = async (
   const instructor = await InstructorModel.findOne({ user: user.userId });
 
   if (!instructor)
-    return res.status(404).json({ error: { message: "Instructor not found" } });
+    return res
+      .status(404)
+      .json({ errors: [{ message: "Instructor not found" }] });
 
   const teachings: IInstructorTeaching[] = await InstructorTeachingModel.find({
     instructor: instructor._id,
@@ -39,7 +41,7 @@ const getCurrentInstructorScheduleHandler = async (
   });
 
   return res.status(200).json({
-    message: "Current Student Schedule",
+    message: "Current Instructor Schedule",
     schedule: {
       lectures,
     },

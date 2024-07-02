@@ -13,9 +13,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   if (!taTeaching) {
     return res.status(404).json({
-      error: {
-        message: "TA teaching not found",
-      },
+      errors: [
+        {
+          message: "TA teaching not found",
+        },
+      ],
     });
   }
 

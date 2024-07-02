@@ -35,9 +35,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   if (!lecture) {
     return res.status(404).json({
-      error: {
-        message: "Lecture not found",
-      },
+      errors: [
+        {
+          message: "Lecture not found",
+        },
+      ],
     });
   }
 

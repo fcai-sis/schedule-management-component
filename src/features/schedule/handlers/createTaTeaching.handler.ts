@@ -26,9 +26,11 @@ const createTaTeachingHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!ta) {
     return res.status(404).json({
-      error: {
-        message: "TA not found",
-      },
+      errors: [
+        {
+          message: "TA not found",
+        },
+      ],
     });
   }
 

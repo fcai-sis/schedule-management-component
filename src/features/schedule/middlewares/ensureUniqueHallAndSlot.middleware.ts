@@ -34,7 +34,9 @@ export const ensureUniqueHallAndSlotMiddleware = async (
     hall = section.hall;
     slot = section.slot;
   } else {
-    return res.status(400).json({ message: "Invalid request body" });
+    return res.status(400).json({
+      errors: [{ message: "Invalid request body" }],
+    });
   }
 
   const [existingLecture, existingSection] = await Promise.all([
@@ -44,16 +46,20 @@ export const ensureUniqueHallAndSlotMiddleware = async (
 
   if (existingLecture)
     return res.status(400).json({
-      error: {
-        message: "Hall and slot already assigned to a lecture",
-      },
+      errors: [
+        {
+          message: "Hall and slot already assigned to a lecture",
+        },
+      ],
     });
 
   if (existingSection)
     return res.status(400).json({
-      error: {
-        message: "Hall and slot already assigned to a lecture",
-      },
+      errors: [
+        {
+          message: "Hall and slot already assigned to a lecture",
+        },
+      ],
     });
 
   next();

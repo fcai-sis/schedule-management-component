@@ -25,7 +25,9 @@ const getDepartmentScheduleHandler = async (
   const department = await DepartmentModel.findOne({ code: departmentCode });
 
   if (!department)
-    return res.status(404).json({ error: { message: "Department not found" } });
+    return res
+      .status(404)
+      .json({ errors: [{ message: "Department not found" }] });
 
   const departmentCourses = await CourseDepartmentModel.find({
     department: department._id,
@@ -41,7 +43,7 @@ const getDepartmentScheduleHandler = async (
   });
 
   return res.status(200).json({
-    message: "Current Student Schedule",
+    message: "Current Department Schedule",
     schedule: {
       lectures,
       sections,

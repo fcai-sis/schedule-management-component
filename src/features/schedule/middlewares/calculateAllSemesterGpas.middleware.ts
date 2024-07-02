@@ -18,7 +18,7 @@ const calculateAllSemesterGpasMiddleware = async (
   });
 
   if (!latestSemester)
-    return res.status(404).json({ error: { message: "no semester found" } });
+    return res.status(404).json({ errors: [{ message: "No semester found" }] });
   const semester = latestSemester._id;
 
   // Get latest semester enrollments
@@ -38,9 +38,11 @@ const calculateAllSemesterGpasMiddleware = async (
 
   if (!students || students.length === 0) {
     return res.status(404).json({
-      error: {
-        message: "No students found",
-      },
+      errors: [
+        {
+          message: "No students found",
+        },
+      ],
     });
   }
 

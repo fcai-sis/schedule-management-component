@@ -3,7 +3,6 @@ import {
   CourseModel,
   SemesterCourseModel,
   SemesterModel,
-  SemesterType,
 } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
@@ -32,9 +31,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   if (!updatedSemester) {
     return res.status(404).json({
-      error: {
-        message: "Semester not found",
-      },
+      errors: [
+        {
+          message: "Semester not found",
+        },
+      ],
     });
   }
 

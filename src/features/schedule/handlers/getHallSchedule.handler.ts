@@ -24,7 +24,7 @@ const getHallScheduleHandler = async (req: HandlerRequest, res: Response) => {
   });
 
   return res.status(200).json({
-    message: "Current Student Schedule",
+    message: "Current Hall Schedule",
     schedule: {
       lectures,
       sections,

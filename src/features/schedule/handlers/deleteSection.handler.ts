@@ -13,9 +13,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   if (!section) {
     return res.status(404).json({
-      error: {
-        message: "Section not found",
-      },
+      errors: [
+        {
+          message: "Section not found",
+        },
+      ],
     });
   }
 

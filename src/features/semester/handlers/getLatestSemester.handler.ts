@@ -12,7 +12,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   });
 
   if (!latestSemester)
-    return res.status(404).json({ error: { message: "no semester found" } });
+    return res.status(404).json({ errors: [{ message: "No semester found" }] });
 
   const semesterCourses = await SemesterCourseModel.find({
     semester: latestSemester,

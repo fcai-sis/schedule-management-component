@@ -13,9 +13,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   if (!semester) {
     return res.status(404).json({
-      error: {
-        message: "Semester not found",
-      },
+      errors: [
+        {
+          message: "Semester not found",
+        },
+      ],
     });
   }
 

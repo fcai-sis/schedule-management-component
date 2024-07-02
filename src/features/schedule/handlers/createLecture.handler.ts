@@ -15,8 +15,6 @@ type HandlerRequest = Request<
 const createLectureHandler = async (req: HandlerRequest, res: Response) => {
   const { lecture, course, semester } = req.body;
 
-  console.log(lecture);
-
   const createdLecture = await LectureModel.create({
     hall: lecture.hall,
     course: course,
