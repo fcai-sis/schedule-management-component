@@ -22,6 +22,7 @@ const getAuthenticatedTaTeachingsHandler = async (
   res: Response
 ) => {
   const { user, semester } = req.body;
+  const { skip, limit } = req.query;
   const ta = await TeachingAssistantModel.findOne({ user: user.userId });
 
   if (!ta)
@@ -30,7 +31,10 @@ const getAuthenticatedTaTeachingsHandler = async (
   const teachings: ITaTeaching[] = await TaTeachingModel.find({
     ta: ta._id,
     semester,
-  }).populate("course");
+  })
+    .skip(Number(skip) ?? 0)
+    .limit(limit as unknown as number)
+    .populate("course");
   const courses = teachings.map((teaching) => teaching.course);
 
   // get all student enrollments for the courses the ta is teaching
@@ -41,8 +45,14 @@ const getAuthenticatedTaTeachingsHandler = async (
     .populate("course")
     .populate("student");
 
+  const totalTeachings = await TaTeachingModel.countDocuments({
+    ta: ta._id,
+    semester,
+  });
+
   const response = {
     myTeachings: teachings,
+    totalTeachings,
     enrolledStudents: enrollments,
   };
 
