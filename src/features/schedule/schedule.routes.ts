@@ -87,7 +87,7 @@ const scheduleRoutes = (router: Router) => {
   );
 
   router.get(
-    "/schedule/instructor-teaching/me",
+    "/instructor-teaching/me",
     checkRole([Role.INSTRUCTOR]),
     getLatestSemesterMiddleware,
     asyncHandler(getAuthenticatedInstructorTeachingsHandler)
@@ -97,7 +97,7 @@ const scheduleRoutes = (router: Router) => {
     "/instructor-teaching/:instructorTeachingId",
     ensureInstructorTeachingIdInParamsMiddleware,
     asyncHandler(deleteInstructorTeachingHandler)
-  );
+  );  
 
   router.post(
     "/ta-teaching",

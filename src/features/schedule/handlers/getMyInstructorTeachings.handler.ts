@@ -22,6 +22,7 @@ const getAuthenticatedInstructorTeachingsHandler = async (
   res: Response
 ) => {
   const { user, semester } = req.body;
+  const { skip, limit } = req.query;
   const instructor = await InstructorModel.findOne({ user: user.userId });
 
   if (!instructor)
@@ -32,7 +33,10 @@ const getAuthenticatedInstructorTeachingsHandler = async (
   const teachings: IInstructorTeaching[] = await InstructorTeachingModel.find({
     instructor: instructor._id,
     semester,
-  }).populate("course");
+  })
+    .skip(Number(skip) ?? 0)
+    .limit(limit as unknown as number)
+    .populate("course");
   const courses = teachings.map((teaching) => teaching.course);
 
   // get all student enrollments for the courses the instructor is teaching
@@ -43,8 +47,14 @@ const getAuthenticatedInstructorTeachingsHandler = async (
     .populate("course")
     .populate("student");
 
+  const totalTeachings = await InstructorTeachingModel.countDocuments({
+    instructor: instructor._id,
+    semester,
+  });
+
   const response = {
     myTeachings: teachings,
+    totalTeachings,
     enrolledStudents: enrollments,
   };
 
