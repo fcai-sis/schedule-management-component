@@ -15,12 +15,16 @@ type HandlerRequest = Request<
 const createLectureHandler = async (req: HandlerRequest, res: Response) => {
   const { lecture, course, semester } = req.body;
 
+  console.log(lecture, course, semester);
+
   const createdLecture = await LectureModel.create({
     hall: lecture.hall,
     course: course,
     slot: lecture.slot,
     semester,
   });
+
+  console.log(createdLecture);
 
   const response = {
     message: "Lecture created successfully",
@@ -31,6 +35,8 @@ const createLectureHandler = async (req: HandlerRequest, res: Response) => {
       slot: createdLecture.slot,
     },
   };
+
+  console.log(response);
 
   return res.status(201).json(response);
 };
