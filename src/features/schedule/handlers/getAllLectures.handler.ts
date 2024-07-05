@@ -15,7 +15,7 @@ const getAllLecturesHandler = async (req: HandlerRequest, res: Response) => {
     .populate("hall")
     .populate("slot")
     .limit(limit as unknown as number)
-    .skip(Number(skip) ?? 0);
+    .skip(req.skip ?? 0);
   console.log(lectures);
 
   const totalLectures = await LectureModel.countDocuments();

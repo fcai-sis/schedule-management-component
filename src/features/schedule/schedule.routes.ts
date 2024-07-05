@@ -38,6 +38,7 @@ import getAllInstructorTeachingsHandler from "./handlers/getAllInstructorTeachin
 import getAllTaTeachingsHandler from "./handlers/getAllTaTeachings.handler";
 import getAuthenticatedTaTeachingsHandler from "./handlers/getMyTaTeachings.handler";
 import getEligibleStudentScheduleHandler from "./handlers/getEligibleStudentSchedule.handler";
+import ensureNotExistingTeachingMiddleware from "./middlewares/ensureNotExistingTeaching.middleware";
 
 const scheduleRoutes = (router: Router) => {
   // Lecture management
@@ -78,6 +79,7 @@ const scheduleRoutes = (router: Router) => {
     "/instructor-teaching",
     getLatestSemesterMiddleware,
     validateCreateInstructorTeachingRequestMiddlware,
+    ensureNotExistingTeachingMiddleware(Role.INSTRUCTOR),
     asyncHandler(createInstructorTeachingHandler)
   );
 
@@ -103,6 +105,7 @@ const scheduleRoutes = (router: Router) => {
     "/ta-teaching",
     getLatestSemesterMiddleware,
     validateCreateTaTeachingRequestMiddlware,
+    ensureNotExistingTeachingMiddleware(Role.TEACHING_ASSISTANT),
     asyncHandler(createTaTeachingHandler)
   );
   router.get("/ta-teaching", asyncHandler(getAllTaTeachingsHandler));
@@ -136,21 +139,21 @@ const scheduleRoutes = (router: Router) => {
   );
 
   router.get(
-    "/schedule/instructor",
+    "/instructor",
     checkRole([Role.INSTRUCTOR]),
     getLatestSemesterMiddleware,
     asyncHandler(getCurrentInstructorScheduleHandler)
   );
 
   router.get(
-    "/schedule/ta",
+    "/ta",
     checkRole([Role.TEACHING_ASSISTANT]),
     getLatestSemesterMiddleware,
     asyncHandler(getCurrentTaScheduleHandler)
   );
 
   router.get(
-    "/schedule/hall/:hallId",
+    "/hall/:hallId",
     checkRole([
       Role.ADMIN,
       Role.STUDENT,
@@ -164,7 +167,7 @@ const scheduleRoutes = (router: Router) => {
   );
 
   router.get(
-    "/schedule/department/:departmentCode",
+    "/department/:departmentCode",
     checkRole([
       Role.ADMIN,
       Role.STUDENT,

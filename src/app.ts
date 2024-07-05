@@ -5,7 +5,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import express, { NextFunction, Request, Response } from "express";
 
-import { scheduleRouter, semestersRouter } from "./router";
+import { scheduleRouter, semesterRouter, teachingRouter } from "./router";
 import { isDev } from "./env";
 import logger from "./core/logger";
 import mongoose from "mongoose";
@@ -53,8 +53,8 @@ app.use(cookieParser());
 
 // Mount API routes
 app.use("/schedule", scheduleRouter());
-app.use("/semester", semestersRouter());
-// app.use("/lectures", lecturesRouter());
+app.use("/semester", semesterRouter());
+app.use("/teaching", teachingRouter());
 // app.use("/sections", sectionsRouter());
 // app.use("/taTeaching", TaTeachingRouter());
 

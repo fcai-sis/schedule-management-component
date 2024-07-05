@@ -7,6 +7,7 @@ import {
 } from "@fcai-sis/shared-models";
 import { Request, Response } from "express";
 import { ObjectId } from "mongoose";
+import { formatLecture } from "../utils";
 
 type HandlerRequest = Request<
   {},
@@ -41,10 +42,7 @@ const getCurrentInstructorScheduleHandler = async (
   });
 
   return res.status(200).json({
-    message: "Current Instructor Schedule",
-    schedule: {
-      lectures,
-    },
+    schedule: [...lectures.map((lecture) => formatLecture(lecture))],
   });
 };
 

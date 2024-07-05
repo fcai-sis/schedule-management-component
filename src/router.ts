@@ -1,7 +1,8 @@
 import { Router } from "express";
 
 import scheduleRoutes from "./features/schedule/schedule.routes";
-import semestersRoutes from "./features/semester/semester.routes";
+import semesterRoutes from "./features/semester/semester.routes";
+import teachingRoutes from "./features/teachings/teachings.routes";
 
 export const scheduleRouter = (): Router => {
   const router = Router();
@@ -9,9 +10,9 @@ export const scheduleRouter = (): Router => {
   return router;
 };
 
-export const semestersRouter = (): Router => {
+export const semesterRouter = (): Router => {
   const router = Router();
-  semestersRoutes(router);
+  semesterRoutes(router);
   return router;
 };
 
@@ -33,8 +34,8 @@ export const semestersRouter = (): Router => {
 //   return router;
 // };
 
-// export const InstructorTeachingRouter = (): Router => {
-//   const router = Router();
-//   intstuctorTeachingRoutes(router);
-//   return router;
-// };
+export const teachingRouter = (): Router => {
+  const router = Router();
+  teachingRoutes(router);
+  return router;
+};

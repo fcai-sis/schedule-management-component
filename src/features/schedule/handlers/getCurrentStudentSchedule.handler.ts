@@ -89,7 +89,6 @@ const getCurrentStudentScheduleHandler = async (
     .populate("slot");
 
   return res.status(200).json({
-    message: "Current Student Schedule",
     schedule: [
       ...lectures.map((lecture) => formatLecture(lecture)),
       ...sections.map((section) => formatSection(section)),

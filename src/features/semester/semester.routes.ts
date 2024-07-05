@@ -12,7 +12,7 @@ import validateCreateSemesterMiddleware from "./middlewares/validateCreateSemest
 import validateUpdateSemesterMiddleware from "./middlewares/validateUpdateSemester.middleware";
 import getLatestSemesterHandler from "./handlers/getLatestSemester.handler";
 
-const semestersRoutes = (router: Router) => {
+const semesterRoutes = (router: Router) => {
   router.post(
     "/",
     validateCreateSemesterMiddleware,
@@ -43,4 +43,4 @@ const semestersRoutes = (router: Router) => {
   );
 };
 
-export default semestersRoutes;
+export default semesterRoutes;
