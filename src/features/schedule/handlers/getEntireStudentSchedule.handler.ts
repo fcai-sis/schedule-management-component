@@ -67,12 +67,16 @@ const getEntireScheduleHandler = async (req: HandlerRequest, res: Response) => {
     .populate("hall")
     .populate("slot");
 
-  return res.status(200).json({
+  const response = {
     schedule: [
       ...lectures.map((lecture) => formatLecture(lecture)),
       ...sections.map((section) => formatSection(section)),
     ],
-  });
+  };
+
+  console.log(response);
+
+  return res.status(200).json(response);
 };
 
 export default getEntireScheduleHandler;

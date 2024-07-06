@@ -36,10 +36,21 @@ const getCurrentInstructorScheduleHandler = async (
   });
   const courses = teachings.map((teaching) => teaching.course);
 
+  // return res.status(200).json({
+  //   courses,
+  // });
+
   const lectures = await LectureModel.find({
     course: { $in: courses },
     semester,
-  });
+  })
+    .populate("course")
+    .populate("hall")
+    .populate("slot");
+
+  // return res.status(200).json({
+  //   lectures,
+  // });
 
   return res.status(200).json({
     schedule: [...lectures.map((lecture) => formatLecture(lecture))],

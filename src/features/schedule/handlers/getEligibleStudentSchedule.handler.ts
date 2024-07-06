@@ -47,10 +47,8 @@ const getEligibleStudentScheduleHandler = async (
     .populate("hall")
     .populate("slot");
 
-  console.log(lectures);
-
   const sections = await SectionModel.find({
-    course: { $in: courses },
+    course: { $in: coursesIds },
     semester,
   })
     .populate("course")

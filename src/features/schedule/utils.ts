@@ -1,5 +1,6 @@
 export function formatLecture(lecture: any) {
   return {
+    _id: lecture._id.toString(),
     slot: lecture.slot,
     hall: lecture.hall,
     type: "lecture",
@@ -17,6 +18,7 @@ export function formatLecture(lecture: any) {
 
 export function formatSection(section: any) {
   return {
+    _id: section._id.toString(),
     slot: section.slot,
     hall: section.hall,
     type: "section",

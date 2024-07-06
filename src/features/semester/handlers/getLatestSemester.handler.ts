@@ -15,7 +15,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return res.status(404).json({ errors: [{ message: "No semester found" }] });
 
   const semesterCourses = await SemesterCourseModel.find({
-    semester: latestSemester,
+    semester: latestSemester._id,
   }).populate("course");
 
   const response = {
