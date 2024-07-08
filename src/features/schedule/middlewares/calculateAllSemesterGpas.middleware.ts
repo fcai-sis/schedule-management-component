@@ -26,14 +26,12 @@ const calculateAllSemesterGpasMiddleware = async (
   // a student can have multiple enrollments in the same semester
   // we just want a way to get the students of the latest semester, so we only need unique students, not all their enrollments
 
-  const latestUniqueSemesterEnrollments = await EnrollmentModel.find({
-    semester,
-  })
+  const uniqueEnrollments = await EnrollmentModel.find({})
     .populate("student")
     .distinct("student");
 
   const students = await StudentModel.find({
-    _id: { $in: latestUniqueSemesterEnrollments },
+    _id: { $in: uniqueEnrollments },
   }).populate("bylaw");
 
   if (!students || students.length === 0) {
@@ -104,16 +102,7 @@ const calculateAllSemesterGpasMiddleware = async (
       })
     );
 
-    const oldGpa = academicStudent.gpa;
-    const oldMandatoryHours = academicStudent.mandatoryHours;
-    const oldElectiveHours = academicStudent.electiveHours;
-
-    const studentGpa = calculateGPA(
-      gradesAccordingToBylaw,
-      oldGpa,
-      oldMandatoryHours,
-      oldElectiveHours
-    );
+    const studentGpa = calculateGPA(gradesAccordingToBylaw);
 
     if (!studentGpa) {
       return {
@@ -143,10 +132,7 @@ const calculateAllSemesterGpasMiddleware = async (
 export default calculateAllSemesterGpasMiddleware;
 
 function calculateGPA(
-  grades: { weight: number; creditHours: number; courseType: string }[],
-  oldGpa: number,
-  oldMandatoryHours: number,
-  oldElectiveHours: number
+  grades: { weight: number; creditHours: number; courseType: string }[]
 ) {
   let totalWeight = 0;
   let totalCreditHours = 0;
@@ -168,10 +154,10 @@ function calculateGPA(
   });
 
   const calculatedGpa = totalWeight / totalCreditHours;
-  const newGpa = oldGpa ? (calculatedGpa + oldGpa) / 2 : calculatedGpa;
+  const newGpa = calculatedGpa;
 
-  const newMandatoryHours = oldMandatoryHours + mandatoryHours;
-  const newElectiveHours = oldElectiveHours + electiveHours;
+  const newMandatoryHours = mandatoryHours;
+  const newElectiveHours = electiveHours;
 
   return {
     gpa: newGpa,
