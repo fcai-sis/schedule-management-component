@@ -34,9 +34,9 @@ const endSemesterHandler = async (req: HandlerRequest, res: Response) => {
   await Promise.all(
     studentData.map(async (studentGpaData) => {
       if (
-        !studentGpaData.gpa ||
-        !studentGpaData.mandatoryHours ||
-        !studentGpaData.electiveHours
+        studentGpaData.gpa === null ||
+        studentGpaData.mandatoryHours === null ||
+        studentGpaData.electiveHours === null
       ) {
         return;
       }

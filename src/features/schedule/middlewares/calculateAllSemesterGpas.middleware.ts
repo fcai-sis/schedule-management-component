@@ -65,40 +65,44 @@ const calculateAllSemesterGpasMiddleware = async (
       };
     }
 
-    const gradesAccordingToBylaw = enrollments.map((enrollment) => {
-      const creditHours = enrollment.course.creditHours;
-      const courseType = enrollment.course.courseType;
-      const grade = enrollment.termWorkMark + enrollment.finalExamMark;
-      let weight = 0;
+    const gradesAccordingToBylaw = await Promise.all(
+      enrollments.map(async (enrollment) => {
+        const creditHours = enrollment.course.creditHours;
+        const courseType = enrollment.course.courseType;
+        const grade = enrollment.termWorkMark + enrollment.finalExamMark;
+        let weight = 0;
 
-      // loop over the bylaw.gradeWeights map and find the grade weight
-      student.bylaw.gradeWeights.forEach(async (bylawWeight: any, key: any) => {
-        if (
-          grade >= bylawWeight.percentage.min &&
-          grade <= bylawWeight.percentage.max
-        ) {
-          weight = bylawWeight.weight;
+        // loop over the bylaw.gradeWeights map and find the grade weight
+        student.bylaw.gradeWeights.forEach(
+          async (bylawWeight: any, key: any) => {
+            if (
+              grade >= bylawWeight.percentage.min &&
+              grade <= bylawWeight.percentage.max
+            ) {
+              weight = bylawWeight.weight;
 
-          enrollment.grade = key;
-          if (grade < student.bylaw.coursePassCriteria) {
-            enrollment.status = EnrollmentStatusEnum[2];
-          } else {
-            enrollment.status = EnrollmentStatusEnum[1];
+              enrollment.grade = key;
+              if (grade < student.bylaw.coursePassCriteria) {
+                enrollment.status = EnrollmentStatusEnum[2];
+              } else {
+                enrollment.status = EnrollmentStatusEnum[1];
+              }
+              await enrollment.save();
+            }
           }
-          await enrollment.save();
+        );
+
+        if (enrollment.status === EnrollmentStatusEnum[2]) {
+          weight = 0;
         }
-      });
 
-      if (enrollment.status === EnrollmentStatusEnum[2]) {
-        weight = 0;
-      }
-
-      return {
-        weight,
-        creditHours: weight === 0 ? 0 : creditHours,
-        courseType,
-      };
-    });
+        return {
+          weight,
+          creditHours: weight === 0 ? 0 : creditHours,
+          courseType,
+        };
+      })
+    );
 
     const oldGpa = academicStudent.gpa;
     const oldMandatoryHours = academicStudent.mandatoryHours;
